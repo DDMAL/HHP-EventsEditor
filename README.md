@@ -19,9 +19,13 @@ Currently, it CAN do:
 6. Export data: Just Click "Save" and it will automatically download "webeditor_export.nq". It also works fine with Sesame Server. Just create a new repository and add this file to the server. Then Sesame Server will automatically upload and read this file.
 
 Web Browser Compatibility:
+
 Chrome:OK
+
 Firefox:OK
+
 Safari 7.0: Does not support "Export"
+
 IE, Opera: No test
 
 
