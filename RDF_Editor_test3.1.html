@@ -72,6 +72,9 @@
 </html>
 
 <script>
+        /*
+           This Function is used to handle files export
+        */
         function doSave(value, type, name) {  
             var blob;  
             if (typeof window.Blob == "function") {  
@@ -102,7 +105,9 @@
         }  
   
  
-  
+        /*
+           This Function is used to actually write new files
+        */  
 
         function Save(){ 
             var tableobj = document.getElementById("mytab");
