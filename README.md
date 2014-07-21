@@ -3,7 +3,8 @@ HHP-EventsEditor
 
 Human History Project: Events Editor
 
-Current Version: 2014.06.12 [RDF_Editor_test3.html])
+Current Version: 2014.07.19 [RDF_Editor_test3.html])
+
 (Beta Version: 2014.07.20 [RDF_Editor_test3.1.html])
 
 Currently, it CAN do:
