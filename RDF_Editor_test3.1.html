@@ -33,7 +33,7 @@
   </thead>
 	<tbody>
 	</tbody>
-</table>
+</table> 
 <div>
  <table width="90%">
   <tr>
@@ -112,7 +112,7 @@
             {
                for (var j=0;j<4;j++)  
                {
-                  var content0 = oTbody.rows[i].cells[j].innerHTML.replace('&lt;','<').replace(/<br>/gim,'\n');
+                  var content0 = oTbody.rows[i].cells[j].getAttributeNode("id").value.replace('&lt;','<').replace(/<br>/gim,'\n');
                   var content1 = content0 .replace('&gt;','>');
                   content1 = escape(content1);
                   content1 = content1.replace(/%u/gim,'\\u').replace(/\"\</gim,'&lt;');
@@ -128,10 +128,7 @@
                     subcontent2 = content1.substring(subcontent_ind+1,content1.length);
                     if (content1.charAt(subcontent_ind+1) === '<')
                     {
-                      //alert('hahahaha');
                       content1 = content1.charAt(0).concat(subcontent).concat('"^^').concat(subcontent2).concat(content1.charAt(content1.length+1));
-                      //alert(content1);
-                      // +content1.charAt(content1.length+1);
                     }
                     else
                     {
@@ -146,21 +143,34 @@
             }
             doSave(a.join(''), "n/a", "webeditor_export.nq");   
         }
-
+        
+        // Indicate whether html is under edit
         var underEdit = false;
+
+        // Indicate current order mode
         var isAsc = true;
+
+        /*
+           This Function is used to add one row in table
+        */
         function addRow()
         {
           
+            
+             //  Get table element in html
+            
             var tableobj = document.getElementById("mytab");
             var oTbody = tableobj.tBodies[0];
          
 
             var row = oTbody.insertRow(oTbody.rows.length);
-      
-          var att0=document.createAttribute("class");
-          att0.value="a1"; 
-          row.setAttributeNode(att0);
+           
+           
+            //  Set Row Attribute
+           
+            var att0=document.createAttribute("class");
+            att0.value="a1"; 
+            row.setAttributeNode(att0);
           
 
             var cell1 = row.insertCell(0);
@@ -191,8 +201,16 @@
 
             cell5.innerHTML = "<td align='center'><input type='checkbox' name='chkArr' style='width:20px' /></td>";
         }
+
+
+        /*
+           This Function is used to remove one row in table
+        */
+        
         function removeRow()
         {
+
+          // get selected checkbox
           var chkObj = document.getElementsByName("chkArr");
           var tableobj = document.getElementById("mytab");
             
@@ -203,43 +221,69 @@
                }
             }
         }
+
+        /*
+            This Function is used to change cell to edit mode
+        */
         function myFunction(obj)
         {
 
           if(!underEdit)
           {
-           var x1 = obj.innerHTML;
+           //var x1 = obj.innerHTML;
+           //alert(obj.getAttributeNode("id").value)
+           var x1 = obj.getAttributeNode("id").value;
+
+           // These are good parameters after test
            var rows_num = obj.offsetHeight/12;
            var cols_num = obj.offsetWidth/8;
            obj.innerHTML = "<textarea rows="+rows_num+ " cols="+cols_num+" onkeydown='showKeyCode(event,this)'>"+x1+"</textarea>";
 
+
            underEdit = true;
-             obj.focus();
-            }
+           obj.focus();
+          }
         }
+        
+        /*
+            This Function is used to finish editing the cell
+        */
         function showKeyCode(e,obj)
         {
-           if (e.keyCode==13)
+           // Keycode of 'Enter' is 13 
+           if (e.keyCode === 13)
            {
+              // The value in textarea within the cell
               var x2 = obj.value;
-              
+
+              obj.parentNode.getAttributeNode("id").value = x2;
               if(x2.charAt(0) === '<')
               {
-                var x3 = '&lt;'+x2.substring(1,x2.length);
-                if(x2.charAt(x2.length) === '>')
-                  {x3 = x2.substring(0,x2.length-1)+'&gt;';}
-                obj.parentNode.innerHTML = x3;
+                var show_sub2 = x2.substring(x2.lastIndexOf("/")+1, x2.length-1);
+                obj.parentNode.innerHTML = show_sub2;
               }
-              else
+              else if (x2.charAt(0) === '"')
               {
-                obj.parentNode.innerHTML = x2;            
+                obj.parentNode.innerHTML = x2;
+                
               }
               
+            }
+            else if (e.keyCode === 17)
+            {
+              alert('fjdisjfao')
             }
             underEdit = false;
         }
+        
+
+        /*
+           This function is used to sort the table
+        */
         function tablesort(obj)
         {
+
+             // Get the table body
              var oTable = document.getElementById('mytab');
              var oTbody = oTable.tBodies[0];
              var arr = [];
@@ -282,12 +326,16 @@
             isAsc = !isAsc;
         }
 
+   // Check is this browser support File APIs
    if (window.File && window.FileReader && window.FileList && window.Blob) {
    } else {
       alert('The File APIs are not fully supported in this browser.');
    }
 
 
+  /*
+       This Function is used to upload Files
+  */
   function handleFileSelect(evt) {
     var files = evt.target.files; // FileList object
 
@@ -325,6 +373,9 @@
 
   }
 
+  /*
+       This Function is used to clear previous upload files
+  */
   function loadstart(evt)
   {
     var oTable = document.getElementById('mytab');
@@ -337,21 +388,31 @@
     }
   }
 
+  /*
+       This Function is used to read N-quad files
+  */
+
   function loadednq(evt) {  
         var fileString = evt.target.result; 
         var item = fileString.split('\n');
         for(var i=0; i<item.length; i++)
         {
+
+          // Chnage Characters which are not compatible with html
           var traslate_str =  unescape(item[i].replace(/\\u/gim,"%u").replace(/\\"/gim,'%inquo').replace(/\</gim,'%lt').replace(/\>/gim,'%gt').replace(/%20/gim,'%blank').replace(/\^\^/gim,''));
           traslate_str = traslate_str.replace(/\\n/gim,'<br>');
           var sub_ind;
           var sub_ind_quote;
           var subject;
-        	//var sub_ind = traslate_str.search(" ");
-          if(traslate_str.charAt(0) === '<')
+          var show_sub;
+        	
+          // extract subject
+          if(traslate_str.charAt(0) === '%' && traslate_str.charAt(1) === 'l' && traslate_str.charAt(2) === 't')
           {
             sub_ind = traslate_str.search(" ");
-        	  subject = '&lt;'+traslate_str.substring(1,sub_ind-1)+'&gt;';
+            var temp = traslate_str.substring(3,sub_ind-3)
+        	  subject = '&lt;'+temp+'&gt;';
+            show_sub = temp.substr(temp.lastIndexOf("/")+1);
           }
           else if(traslate_str.charAt(0) === '"')
           { 
@@ -364,15 +425,20 @@
 
               
                subject = traslate_str.substring(0,sub_ind_quote+2).concat(template_str2);
+               show_sub = traslate_str.substring(0,sub_ind_quote+2);
                sub_ind_quote = sub_ind_quote + sub_ind_blank;
+
           }
           else 
           {
             sub_ind = traslate_str.search(" ");
             subject = traslate_str.substring(0,sub_ind);
+            show_sub = subject;
           }
           subject = subject.replace(/%inquo/gim,'\"').replace(/%lt/gim,'&lt;').replace(/%gt/,'&gt;').replace(/%blank/,' ');
+          show_sub = show_sub.replace(/%inquo/gim,'\"').replace(/%lt/gim,'&lt;').replace(/%gt/,'&gt;').replace(/%blank/,' ');
 
+          //extract predicate
           var string_withour_sub;
           if(sub_ind === 0) 
             {
@@ -381,12 +447,16 @@
             }
           else {
               string_withour_sub = traslate_str.substr(sub_ind+1); 
-            }     
+            }   
+
         	var pred_ind;
-          if(string_withour_sub.charAt(0) === '<')
+          var show_predicate;
+          if(string_withour_sub.charAt(0) === '%' && string_withour_sub.charAt(1) === 'l' && string_withour_sub.charAt(2) === 't')
           {
             pred_ind = string_withour_sub.search(" ");
-        	  predicate = '&lt;'+string_withour_sub.substring(1,pred_ind-1)+'&gt;';
+            var temp = string_withour_sub.substring(3, pred_ind-3);
+        	  predicate = '&lt;'+temp+'&gt;';
+            show_predicate = temp.substr(temp.lastIndexOf("/")+1);
           }
           else if(string_withour_sub.charAt(0) === '"')
           {
@@ -398,16 +468,20 @@
             template_str2 = template_str2.substring(0,pred_ind_blank);
 
             predicate = string_withour_sub.substring(0,pred_ind_quote+2).concat(template_str2);
+            show_predicate = string_withour_sub.substring(0,pred_ind_quote+2);
             pred_ind_quote = pred_ind_quote + pred_ind_blank;
           }
           else 
           {
             pred_ind = string_withour_sub.search(" ");
             predicate = string_withour_sub.substring(0,pred_ind);
+            show_predicate = predicate;
           }
           predicate = predicate.replace(/%inquo/gim,'\"').replace(/%lt/gim,'&lt;').replace(/%gt/gim,'&gt;').replace(/%blank/,' ');
+          show_predicate = show_predicate.replace(/%inquo/gim,'\"').replace(/%lt/gim,'&lt;').replace(/%gt/gim,'&gt;').replace(/%blank/,' ');
+          //alert(show_predicate);
 
-
+          // extract object
           var string_without_pres;
           if(pred_ind === 0) 
             {
@@ -416,12 +490,16 @@
             }
           else {
               string_without_pres = string_withour_sub.substr(pred_ind+1); 
-            }     
+            } 
+
           var obj_ind;
-          if(string_without_pres.charAt(0) === '<')
+          var show_obj;
+          if(string_without_pres.charAt(0) === '%' && string_without_pres.charAt(1) === 'l' && string_without_pres.charAt(2) === 't')
           {
             obj_ind = string_without_pres.search(" ");
-            object = '&lt;'+string_without_pres.substring(1,obj_ind-1)+'&gt;';
+            var temp = string_without_pres.substring(3,obj_ind-3)
+            object = '&lt;' + temp + '&gt;';
+            show_obj = temp.substr(temp.lastIndexOf("/")+1);
           }
           else if(string_without_pres.charAt(0) === '"')
           {
@@ -433,16 +511,25 @@
             template_str2 = template_str2.substring(0,obj_ind_blank);
 
             object = string_without_pres.substring(0,obj_ind_quote+2).concat(template_str2);
+            if(template_str2.charAt(0) === '%' && template_str2.charAt(1) === 'l' && template_str2.charAt(2) === 't')
+             {show_obj = string_without_pres.substring(0,obj_ind_quote+2);}
+            else
+              {show_obj = object;}
             obj_ind_quote = obj_ind_quote + obj_ind_blank;
+
           }
           else 
           {
             obj_ind = string_without_pres.search(" ");
             object = string_without_pres.substring(0,obj_ind);
+            show_obj = object;
+
           }
           object = object.replace(/%inquo/gim,'\"').replace(/%lt/gim,'&lt;').replace(/%gt/gim,'&gt;').replace(/%blank/,' ');
+          show_obj = show_obj.replace(/%inquo/gim,'\"').replace(/%lt/gim,'&lt;').replace(/%gt/gim,'&gt;').replace(/%blank/,' ');
 
-
+        
+          // extract graph name
           var string_without_obj;
           if(obj_ind === 0) 
             {
@@ -451,12 +538,17 @@
             }
           else {
               string_without_obj = string_without_pres.substr(obj_ind+1); 
-            }     
+            }   
+
           var graph_ind;
-          if(string_without_obj.charAt(0) === '<')
+          var show_graph;
+
+          if(string_without_obj.charAt(0) === '%' && string_without_obj.charAt(1) === 'l' && string_without_obj.charAt(2) === 't')
           {
             graph_ind = string_without_obj.search(" ");
-            graphname = '&lt;'+string_without_obj.substring(1,graph_ind-1)+'&gt;';
+            var temp = string_without_obj.substring(3,graph_ind-3)
+            graphname = '&lt;'+temp+'&gt;';
+            show_graph = temp.substr(temp.lastIndexOf("/")+1);
           }
           else if(string_without_obj.charAt(0) === '"')
           {
@@ -468,16 +560,19 @@
             template_str2 = template_str2.substring(0,graph_ind_blank);
 
             graphname = string_without_obj.substring(0,graph_ind_quote+2).concat(template_str2);
+            show_graph = string_without_obj.substring(0,graph_ind_quote+2);
             graph_ind_quote = graph_ind_quote + graph_ind_blank;
           }
           else 
           {
             graph_ind = string_without_obj.search(" ");
             graphname = string_without_obj.substring(0,graph_ind);
+            show_graph = graphname;
           }
           graphname = graphname.replace(/%inquo/gim,'\"').replace(/%lt/gim,'&lt;').replace(/%gt/gim,'&gt;').replace(/%blank/,' ');
          
 
+          // show all stuff
          if(subject.length>0)
         {
         	        var oTable = document.getElementById('mytab');
@@ -496,25 +591,49 @@
                   var cell4 = row.insertCell(3);
                   var cell5 = row.insertCell(4);
 
-            cell1.innerHTML = subject;
+            cell1.innerHTML = show_sub;
             var att1=document.createAttribute("ondblclick");
             att1.value="myFunction(this)"; 
             cell1.setAttributeNode(att1);
+            var att12=document.createAttribute("id");
+            att12.value=subject; 
+            cell1.setAttributeNode(att12);
+            var att13=document.createAttribute("show");
+            att13.value=show_sub; 
+            cell1.setAttributeNode(att13);
 
-            cell2.innerHTML = predicate;
+            cell2.innerHTML = show_predicate;
             var att2=document.createAttribute("ondblclick");
             att2.value="myFunction(this)"; 
             cell2.setAttributeNode(att2);
+            var att22=document.createAttribute("id");
+            att22.value=predicate; 
+            cell2.setAttributeNode(att22);
+            var att23=document.createAttribute("show");
+            att23.value=show_predicate; 
+            cell2.setAttributeNode(att23);
 
-            cell3.innerHTML = object;
+            cell3.innerHTML = show_obj;
             var att3=document.createAttribute("ondblclick");
             att3.value="myFunction(this)"; 
             cell3.setAttributeNode(att3);
+            var att32=document.createAttribute("id");
+            att32.value=object; 
+            cell3.setAttributeNode(att32);
+            var att33=document.createAttribute("show");
+            att33.value=show_obj; 
+            cell3.setAttributeNode(att33);
 
-            cell4.innerHTML = graphname;
+            cell4.innerHTML = show_graph;
             var att4=document.createAttribute("ondblclick");
             att4.value="myFunction(this)"; 
             cell4.setAttributeNode(att4);
+            var att42=document.createAttribute("id");
+            att42.value=graphname; 
+            cell4.setAttributeNode(att42);
+            var att43=document.createAttribute("show");
+            att43.value=graphname; 
+            cell4.setAttributeNode(att43);
 
             cell5.innerHTML = "<td align='center'><input type='checkbox' name='chkArr' style='width:20px' /></td>";
 
@@ -528,15 +647,21 @@
         var item = fileString.split('\n');
         for(var i=0; i<item.length; i++)
         {
-          var traslate_str =  unescape(item[i].replace(/\\u/gim,"%u").replace(/\\n/gim,"<br>").replace(/\\"/gim,'%inquo').replace(/\</gim,'%lt').replace(/\>/gim,'%gt').replace(/%20/gim,'%blank').replace(/\^\^/gim,''));
+           // Chnage Characters which are not compatible with html
+          var traslate_str =  unescape(item[i].replace(/\\u/gim,"%u").replace(/\\"/gim,'%inquo').replace(/\</gim,'%lt').replace(/\>/gim,'%gt').replace(/%20/gim,'%blank').replace(/\^\^/gim,''));
+          traslate_str = traslate_str.replace(/\\n/gim,'<br>');
           var sub_ind;
           var sub_ind_quote;
           var subject;
-          //var sub_ind = traslate_str.search(" ");
-          if(traslate_str.charAt(0) === '<')
+          var show_sub;
+          
+          // extract subject
+          if(traslate_str.charAt(0) === '%' && traslate_str.charAt(1) === 'l' && traslate_str.charAt(2) === 't')
           {
             sub_ind = traslate_str.search(" ");
-            subject = '&lt;'+traslate_str.substring(1,sub_ind-1)+'&gt;';
+            var temp = traslate_str.substring(3,sub_ind-3)
+            subject = '&lt;'+temp+'&gt;';
+            show_sub = temp.substr(temp.lastIndexOf("/")+1);
           }
           else if(traslate_str.charAt(0) === '"')
           { 
@@ -549,16 +674,20 @@
 
               
                subject = traslate_str.substring(0,sub_ind_quote+2).concat(template_str2);
+               show_sub = traslate_str.substring(0,sub_ind_quote+2);
                sub_ind_quote = sub_ind_quote + sub_ind_blank;
+
           }
           else 
           {
             sub_ind = traslate_str.search(" ");
             subject = traslate_str.substring(0,sub_ind);
+            show_sub = subject;
           }
-          subject = subject.replace(/%inquo/gim,'\"').replace(/%lt/gim,'&lt;').replace('%gt','&gt;').replace(/%blank/,' ');
+          subject = subject.replace(/%inquo/gim,'\"').replace(/%lt/gim,'&lt;').replace(/%gt/,'&gt;').replace(/%blank/,' ');
+          show_sub = show_sub.replace(/%inquo/gim,'\"').replace(/%lt/gim,'&lt;').replace(/%gt/,'&gt;').replace(/%blank/,' ');
 
-
+          //extract predicate
           var string_withour_sub;
           if(sub_ind === 0) 
             {
@@ -567,12 +696,16 @@
             }
           else {
               string_withour_sub = traslate_str.substr(sub_ind+1); 
-            }     
+            }   
+
           var pred_ind;
-          if(string_withour_sub.charAt(0) === '<')
+          var show_predicate;
+          if(string_withour_sub.charAt(0) === '%' && string_withour_sub.charAt(1) === 'l' && string_withour_sub.charAt(2) === 't')
           {
             pred_ind = string_withour_sub.search(" ");
-            predicate = '&lt;'+string_withour_sub.substring(1,pred_ind-1)+'&gt;';
+            var temp = string_withour_sub.substring(3, pred_ind-3);
+            predicate = '&lt;'+temp+'&gt;';
+            show_predicate = temp.substr(temp.lastIndexOf("/")+1);
           }
           else if(string_withour_sub.charAt(0) === '"')
           {
@@ -584,16 +717,20 @@
             template_str2 = template_str2.substring(0,pred_ind_blank);
 
             predicate = string_withour_sub.substring(0,pred_ind_quote+2).concat(template_str2);
+            show_predicate = string_withour_sub.substring(0,pred_ind_quote+2);
             pred_ind_quote = pred_ind_quote + pred_ind_blank;
           }
           else 
           {
             pred_ind = string_withour_sub.search(" ");
             predicate = string_withour_sub.substring(0,pred_ind);
+            show_predicate = predicate;
           }
           predicate = predicate.replace(/%inquo/gim,'\"').replace(/%lt/gim,'&lt;').replace(/%gt/gim,'&gt;').replace(/%blank/,' ');
+          show_predicate = show_predicate.replace(/%inquo/gim,'\"').replace(/%lt/gim,'&lt;').replace(/%gt/gim,'&gt;').replace(/%blank/,' ');
+          //alert(show_predicate);
 
-
+          // extract object
           var string_without_pres;
           if(pred_ind === 0) 
             {
@@ -602,12 +739,16 @@
             }
           else {
               string_without_pres = string_withour_sub.substr(pred_ind+1); 
-            }     
+            } 
+
           var obj_ind;
-          if(string_without_pres.charAt(0) === '<')
+          var show_obj;
+          if(string_without_pres.charAt(0) === '%' && string_without_pres.charAt(1) === 'l' && string_without_pres.charAt(2) === 't')
           {
             obj_ind = string_without_pres.search(" ");
-            object = '&lt;'+string_without_pres.substring(1,obj_ind-1)+'&gt;';
+            var temp = string_without_pres.substring(3,obj_ind-3)
+            object = '&lt;' + temp + '&gt;';
+            show_obj = temp.substr(temp.lastIndexOf("/")+1);
           }
           else if(string_without_pres.charAt(0) === '"')
           {
@@ -619,15 +760,33 @@
             template_str2 = template_str2.substring(0,obj_ind_blank);
 
             object = string_without_pres.substring(0,obj_ind_quote+2).concat(template_str2);
+            show_obj = string_without_pres.substring(0,obj_ind_quote+2);
             obj_ind_quote = obj_ind_quote + obj_ind_blank;
+            // alert("fjdifjos")
+
           }
           else 
           {
             obj_ind = string_without_pres.search(" ");
             object = string_without_pres.substring(0,obj_ind);
+            show_obj = object;
+
           }
           object = object.replace(/%inquo/gim,'\"').replace(/%lt/gim,'&lt;').replace(/%gt/gim,'&gt;').replace(/%blank/,' ');
-          
+          show_obj = show_obj.replace(/%inquo/gim,'\"').replace(/%lt/gim,'&lt;').replace(/%gt/gim,'&gt;').replace(/%blank/,' ');
+
+        
+          // extract graph name
+          var string_without_obj;
+          if(obj_ind === 0) 
+            {
+              string_without_obj = string_without_pres.substr(obj_ind_quote+3);
+             
+            }
+          else {
+              string_without_obj = string_without_pres.substr(obj_ind+1); 
+            }   
+         
 
             if(subject.length>0)
             {
@@ -647,20 +806,30 @@
             var cell4 = row.insertCell(3);
             var cell5 = row.insertCell(4);
 
-            cell1.innerHTML = subject;
+ 
+            cell1.innerHTML = show_sub;
             var att1=document.createAttribute("ondblclick");
             att1.value="myFunction(this)"; 
             cell1.setAttributeNode(att1);
+            var att12=document.createAttribute("id");
+            att12.value=subject; 
+            cell1.setAttributeNode(att12);
 
-            cell2.innerHTML = predicate;
+            cell2.innerHTML = show_predicate;
             var att2=document.createAttribute("ondblclick");
             att2.value="myFunction(this)"; 
             cell2.setAttributeNode(att2);
+            var att22=document.createAttribute("id");
+            att22.value=predicate; 
+            cell2.setAttributeNode(att22);
 
-            cell3.innerHTML = object;
+            cell3.innerHTML = show_obj;
             var att3=document.createAttribute("ondblclick");
             att3.value="myFunction(this)"; 
             cell3.setAttributeNode(att3);
+            var att32=document.createAttribute("id");
+            att32.value=object; 
+            cell3.setAttributeNode(att32);
 
             cell5.innerHTML = "<td align='center'><input type='checkbox' name='chkArr' style='width:20px' /></td>";
 
