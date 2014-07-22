@@ -22,6 +22,8 @@ Currently, it CAN do:
 6. Export data: Just Click "Save" and it will automatically download "webeditor_export.nq". It also works fine with Sesame Server. Just create a new repository and add this file to the server. Then Sesame Server will automatically upload and read this file.
 
 7. Show terms more like human-way. However it will still show full URI when it is under edit or in exporting files.
+
+
 Web Browser Compatibility:
 
 Chrome:OK
