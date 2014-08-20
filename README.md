@@ -23,7 +23,7 @@ Currently, it CAN do:
 
 Work Flow with Editor:
 
-Choose file you want to import --> Edit prefix --> Click "Apply" --> Edit N-Quads/Triples --> Export
+     Choose file you want to import --> Edit prefix --> Click "Apply" --> Edit N-Quads/Triples --> Export
 
 
 Web Browser Compatibility:
