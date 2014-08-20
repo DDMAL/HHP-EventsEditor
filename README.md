@@ -3,10 +3,9 @@ HHP-EventsEditor
 
 Human History Project: Events Editor
 
-Current Version: 2014.08.19 [RDF_Editor_test3.html])
+Current Version: 2014.06.12
 
 Currently, it CAN do:
-
 1. Sorting : Just click the header of each column. The whole table will be sorted according this column. Second click will be "descent sorting".
 
 2. Edit Cell Content:  Double-click the cell you want to edit -> Edit it -> Press "Enter" to save the revision;
@@ -19,16 +18,19 @@ Currently, it CAN do:
 
 6. Export data: Just Click "Save" and it will automatically download "webeditor_export.nq". It also works fine with Sesame Server. Just create a new repository and add this file to the server. Then Sesame Server will automatically upload and read this file.
 
-7. Show terms more like human-way with standard ontologies and can easily change back. You can edit(add/delete) the prefix to represent standard ontology. Click "apply" to the show the result and Click "FullURI" to show original full URI. It will still show full URI in exporting files.
+7. Prefix of Standard ontologies: You can edit(add/delete) the prefix list of ontologies. Just click "Apply" to show results and click "Full URI" to change back. For example: 
+<http://dbpedia.org/resource/Pietro_Aron>    <http://dbpedia.org/property/dateOfDeath>       "1555"<http://www.w3.org/2001/XMLSchema#integer>
+are displayed as 
+<dbpedia:Pietro_Aron> <dbpprop:dateOfDeath> "1555"<xsd:integer> 
 
-Work Flow with Editor:
 
-     Choose file you want to import --> Edit prefix --> Click "Apply" --> Edit N-Quads/Triples --> Export
+The current workflow:
 
+   import N-quad/triple file --> edit(add/delete) or keep default prefix list --> 'apply' --> edit N-quad/triple terms --> export file
 
 Web Browser Compatibility:
 
-Chrome(strongly recommended):OK
+Chrome(Strongly Recommended):OK
 
 Firefox:OK
 
