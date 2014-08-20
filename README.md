@@ -19,7 +19,7 @@ Currently, it CAN do:
 6. Export data: Just Click "Save" and it will automatically download "webeditor_export.nq". It also works fine with Sesame Server. Just create a new repository and add this file to the server. Then Sesame Server will automatically upload and read this file.
 
 7. Prefix of Standard ontologies: You can edit(add/delete) the prefix list of ontologies. Just click "Apply" to show results and click "Full URI" to change back. For example: 
-<http://dbpedia.org/resource/Pietro_Aron>    <http://dbpedia.org/property/dateOfDeath>       "1555"<http://www.w3.org/2001/XMLSchema#integer>
+&lthttp://dbpedia.org/resource/Pietro_Aron&gt    <http://dbpedia.org/property/dateOfDeath>       "1555"<http://www.w3.org/2001/XMLSchema#integer>
 are displayed as 
 <dbpedia:Pietro_Aron> <dbpprop:dateOfDeath> "1555"<xsd:integer> 
 
