@@ -184,22 +184,18 @@
             var cell4 = row.insertCell(3);
             var cell5 = row.insertCell(4);
 
-            //cell1.innerHTML = subject;
             var att1=document.createAttribute("ondblclick");
             att1.value="myFunction(this)"; 
             cell1.setAttributeNode(att1);
 
-            //cell2.innerHTML = predicate;
             var att2=document.createAttribute("ondblclick");
             att2.value="myFunction(this)"; 
             cell2.setAttributeNode(att2);
 
-            //cell3.innerHTML = object;
             var att3=document.createAttribute("ondblclick");
             att3.value="myFunction(this)"; 
             cell3.setAttributeNode(att3);
 
-            //cell4.innerHTML = graphname;
             var att4=document.createAttribute("ondblclick");
             att4.value="myFunction(this)"; 
             cell4.setAttributeNode(att4);
@@ -235,8 +231,7 @@
 
           if(!underEdit)
           {
-           //var x1 = obj.innerHTML;
-           //alert(obj.getAttributeNode("id").value)
+
            var x1 = obj.getAttributeNode("id").value;
 
            // These are good parameters after test
@@ -293,7 +288,6 @@
              var oTbody = oTable.tBodies[0];
              var arr = [];
              var sortcolum;
-             // alert(obj.innerHTML);
              if(obj.innerHTML=="Graph Name")
              {
               sortcolum = 3;
@@ -484,7 +478,6 @@
           }
           predicate = predicate.replace(/%inquo/gim,'\"').replace(/%lt/gim,'&lt;').replace(/%gt/gim,'&gt;').replace(/%blank/,' ');
           show_predicate = show_predicate.replace(/%inquo/gim,'\"').replace(/%lt/gim,'&lt;').replace(/%gt/gim,'&gt;').replace(/%blank/,' ');
-          //alert(show_predicate);
 
           // extract object
           var string_without_pres;

@@ -38,7 +38,7 @@ h1,h2,h3{
 
 
 table.t2{
-	border:1px solid #9db3c5;
+	border:3px solid #9db3c5;
 	color:#666;
 }
 table.t2 th {
@@ -62,6 +62,64 @@ table.t2 tr.a1{
 }
 
 table.t2 tr.a2{
+	font-family:arial;
+	/*background-color:#e8f3fd;*/
+}
+
+table.t4{
+	border:0px solid #9db3c5;
+	color:#666;
+}
+table.t4 th {
+	background-image: url(th_bg2.gif);
+	background-repeat::repeat-x;
+	height:30px;
+	color:#fff;
+	cursor: pointer;
+}
+table.t4 td{
+	border:0px dotted #cad9ea;
+	padding:0 2px 0;
+}
+table.t4 th{
+	border:1px solid #a7d1fd;
+	padding:0 2px 0;
+}
+table.t4 tr.a1{
+	font-family:arial;
+	background-color:#e8f3fd;
+}
+
+table.t4 tr.a2{
+	font-family:arial;
+	/*background-color:#e8f3fd;*/
+}
+
+table.t3{
+	border:1px solid #9db3c5;
+	color:#666;
+}
+table.t3 th {
+	background-image: url(th3.jpg);
+	background-repeat::repeat-x;
+	height:30px;
+	color:#fff;
+	cursor: pointer;
+}
+table.t3 td{
+	border:1px dotted #cad9ea;
+	padding:0 2px 0;
+}
+table.t3 th{
+	border:1px solid #a7d1fd;
+	padding:0 2px 0;
+}
+table.t3 tr.a1{
+	font-family:arial;
+	background-color:#e8f3fd;
+}
+
+table.t3 tr.a2{
 	font-family:arial;
 	/*background-color:#e8f3fd;*/
 }

@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="./style2.css" type="text/css" id="" media="print, projection, screen" />
 </head>
 
-<body>
+<body onload="loadprefix()">
 <div class="title">
   <h1>RDF Web Editor Test Version</h1>
 </div>
@@ -17,6 +17,39 @@
     <input type="button" id="savetext" class='btn blue' value="Export" onclick="Save()"/></div>  
     </td>
     <td>
+      <table width="95%" id="myprefixtab"  border="1" class="t3" style="word-break:break-all; word-wrap:break-all;">
+      <thead>
+      <tr>
+        <th width="10%">Prefix</th>
+        <th width="25%">Namespace</th>
+        <th width="5%">Delete</th>
+      </tr>
+      </thead>
+      <tbody id="prefixbody">
+      </tbody>
+      </table>
+      <table width="90%" align="center" class="t4">
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td><input name="xx" class='btn green' type="button" value="Add" onclick="addPrefixRow()"/></td>
+          <td><input name="xx" class='btn green' type="button" value="Delete" onclick="removePrefixRow()"/></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td><input name="xx" class='btn pink' type="button" value="Apply" onclick="applyontology()"/></td>
+          <td><input name="xx" class='btn pink' type="button" value="FullURI" onclick="removeontology()"/></td>
+        </tr>
+     </table>
     </td>
   </tr>
 </table>
@@ -64,7 +97,7 @@
     <td></td>
     <td></td>
     <td><input name="xx" class='btn blue' type="button" value="Add" onclick="addRow()"/></td>
-    <td><input name="xx" class='btn green' type="button" value="Delete" onclick="removeRow()"/></td>
+    <td><input name="xx" class='btn blue' type="button" value="Delete" onclick="removeRow()"/></td>
   </tr>
 </table>
 </div>
@@ -72,6 +105,82 @@
 </html>
 
 <script>
+        var prefixlist =  new Array();
+        function loadpreix()
+        {
+          prefixlist[0] = new Array("rdf:","http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+          prefixlist[1] = new Array("rdfs:","http://www.w3.org/2000/01/rdf-schema#");
+          prefixlist[2] = new Array("foaf:","http://xmlns.com/foaf/0.1/");
+          prefixlist[3] = new Array("owl:","http://www.w3.org/2002/07/owl#");
+          prefixlist[4] = new Array("xsd:","http://www.w3.org/2001/XMLSchema#");
+          prefixlist[5] = new Array("dbpedia-owl:","http://dbpedia.org/ontology/");
+          prefixlist[6] = new Array("category:","http://dbpedia.org/resource/Category:");
+          prefixlist[7] = new Array("dbpedia:","http://dbpedia.org/resource/");
+          prefixlist[8] = new Array("dbpprop:","http://dbpedia.org/property/"); 
+          prefixlist[9] = new Array("yago:","http://dbpedia.org/class/yago/");
+          prefixlist[10] = new Array("dcterms:","http://purl.org/dc/terms/");         
+
+          var tableobj = document.getElementById("prefixbody");
+          for (var i = 0; i< prefixlist.length;i++)
+          {
+               row = tableobj.insertRow()
+               cell1 = row.insertCell(0);
+               cell1.innerHTML = prefixlist[i][0];
+               cell2 = row.insertCell(1);
+               cell2.innerHTML = prefixlist[i][1];
+               cell3 = row.insertCell(2);
+          }
+
+        }
+
+        window.onload = loadpreix;
+
+        function applyontology()
+        {
+            var prefixbody = document.getElementById("prefixbody");
+
+            for (var j = 0; j< prefixbody.rows.length;j++)
+            {
+               prefixlist[j] = new Array(prefixbody.rows[j].cells[0].innerHTML,prefixbody.rows[j].cells[1].innerHTML);
+            }
+
+            var tableobj = document.getElementById("mytab");
+            var oTbody = tableobj.tBodies[0];  
+            for(var i=0;i<oTbody.rows.length;i++)
+            {
+               for (var j=0;j<4;j++)  
+               {
+                  for (var k = 0;k<prefixlist.length;k++)
+                  {
+                    oTbody.rows[i].cells[j].innerHTML = oTbody.rows[i].cells[j].innerHTML.replace(prefixlist[k][1],prefixlist[k][0]);
+                  }
+
+               }
+            } 
+        }
+
+        function removeontology()
+        {
+            var prefixbody = document.getElementById("prefixbody");
+
+            var tableobj = document.getElementById("mytab");
+            var oTbody = tableobj.tBodies[0];  
+            for(var i=0;i<oTbody.rows.length;i++)
+            {
+               for (var j=0;j<4;j++)  
+               {
+                  for (var k = 0;k<prefixlist.length;k++)
+                  {
+                    oTbody.rows[i].cells[j].innerHTML = oTbody.rows[i].cells[j].innerHTML.replace(prefixlist[k][0],prefixlist[k][1]);
+                  }
+
+               }
+            } 
+        }
+
+        /*
+           This Function is used to handle files export
+        */
         function doSave(value, type, name) {  
             var blob;  
             if (typeof window.Blob == "function") {  
@@ -101,17 +210,22 @@
             }  
         }  
   
- 
-  
-
+        /*
+           This Function is used to actually write new files
+        */ 
         function Save(){ 
             var tableobj = document.getElementById("mytab");
             var oTbody = tableobj.tBodies[0]; 
-            var a=new Array();  
+            var a=new Array(); 
             for(var i=0;i<oTbody.rows.length;i++)
             {
                for (var j=0;j<4;j++)  
                {
+                  for(var k=0;k<prefixlist.length;k++)
+                  {
+                    oTbody.rows[i].cells[j].innerHTML = oTbody.rows[i].cells[j].innerHTML.replace(prefixlist[k][0],prefixlist[k][1]);
+                   
+                  }
                   var content0 = oTbody.rows[i].cells[j].innerHTML.replace('&lt;','<').replace(/<br>/gim,'\n');
                   var content1 = content0 .replace('&gt;','>');
                   content1 = escape(content1);
@@ -128,10 +242,7 @@
                     subcontent2 = content1.substring(subcontent_ind+1,content1.length);
                     if (content1.charAt(subcontent_ind+1) === '<')
                     {
-                      //alert('hahahaha');
                       content1 = content1.charAt(0).concat(subcontent).concat('"^^').concat(subcontent2).concat(content1.charAt(content1.length+1));
-                      //alert(content1);
-                      // +content1.charAt(content1.length+1);
                     }
                     else
                     {
@@ -147,15 +258,47 @@
             doSave(a.join(''), "n/a", "webeditor_export.nq");   
         }
 
+        // Indicate whether html is under edit
         var underEdit = false;
+        // Indicate current order mode
         var isAsc = true;
-        function addRow()
+
+        /*
+           This Function is used to add one row in Prefix table
+        */
+        function addPrefixRow()
         {
           
+            var oTbody = document.getElementById("prefixbody");
+         
+
+            var row = oTbody.insertRow(oTbody.rows.length);
+
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+
+            var att1=document.createAttribute("ondblclick");
+            att1.value="myFunction(this)"; 
+            cell1.setAttributeNode(att1);
+
+            var att2=document.createAttribute("ondblclick");
+            att2.value="myFunction(this)"; 
+            cell2.setAttributeNode(att2);
+
+            cell3.innerHTML = "<td align='center'><input type='checkbox' name='chkArr2' style='width:20px' /></td>";
+        }
+
+        /*
+           This Function is used to add one row in table
+        */
+        function addRow()
+        {
+             //  Get table element in html          
             var tableobj = document.getElementById("mytab");
             var oTbody = tableobj.tBodies[0];
          
-
+            //  Set Row Attribute
             var row = oTbody.insertRow(oTbody.rows.length);
       
           var att0=document.createAttribute("class");
@@ -169,30 +312,32 @@
             var cell4 = row.insertCell(3);
             var cell5 = row.insertCell(4);
 
-            //cell1.innerHTML = subject;
             var att1=document.createAttribute("ondblclick");
             att1.value="myFunction(this)"; 
             cell1.setAttributeNode(att1);
 
-            //cell2.innerHTML = predicate;
             var att2=document.createAttribute("ondblclick");
             att2.value="myFunction(this)"; 
             cell2.setAttributeNode(att2);
 
-            //cell3.innerHTML = object;
             var att3=document.createAttribute("ondblclick");
             att3.value="myFunction(this)"; 
             cell3.setAttributeNode(att3);
 
-            //cell4.innerHTML = graphname;
             var att4=document.createAttribute("ondblclick");
             att4.value="myFunction(this)"; 
             cell4.setAttributeNode(att4);
 
             cell5.innerHTML = "<td align='center'><input type='checkbox' name='chkArr' style='width:20px' /></td>";
         }
+
+        /*
+           This Function is used to remove one row in table
+        */
         function removeRow()
         {
+
+          // get selected checkbox
           var chkObj = document.getElementsByName("chkArr");
           var tableobj = document.getElementById("mytab");
             
@@ -203,12 +348,34 @@
                }
             }
         }
+
+        /*
+           This Function is used to remove one row in Prefix table
+        */
+       function removePrefixRow()
+        {
+          var chkObj = document.getElementsByName("chkArr2");
+          var tableobj = document.getElementById("prefixbody");
+            
+          for(var k=0;k<chkObj.length;k++){
+                if(chkObj[k].checked){
+                   tableobj.deleteRow(k+11);
+                   k=-1;
+               }
+            }
+        }
+
+        /*
+            This Function is used to change cell to edit mode
+        */
         function myFunction(obj)
         {
 
           if(!underEdit)
           {
            var x1 = obj.innerHTML;
+
+          // These are good parameters after test
            var rows_num = obj.offsetHeight/12;
            var cols_num = obj.offsetWidth/8;
            obj.innerHTML = "<textarea rows="+rows_num+ " cols="+cols_num+" onkeydown='showKeyCode(event,this)'>"+x1+"</textarea>";
@@ -217,6 +384,10 @@
              obj.focus();
             }
         }
+
+        /*
+            This Function is used to finish editing the cell
+        */
         function showKeyCode(e,obj)
         {
            if (e.keyCode==13)
@@ -232,19 +403,25 @@
               }
               else
               {
-                obj.parentNode.innerHTML = x2;            
+                obj.parentNode.innerHTML = x2.replace("<","&lt").replace(">","&gt");            
               }
               
             }
             underEdit = false;
         }
+
+        /*
+           This function is used to sort the table
+        */        
+
         function tablesort(obj)
         {
+            // Get the table body
              var oTable = document.getElementById('mytab');
              var oTbody = oTable.tBodies[0];
              var arr = [];
              var sortcolum;
-             // alert(obj.innerHTML);
+
              if(obj.innerHTML=="Graph Name")
              {
               sortcolum = 3;
@@ -282,12 +459,15 @@
             isAsc = !isAsc;
         }
 
+   // Check is this browser support File APIs
    if (window.File && window.FileReader && window.FileList && window.Blob) {
    } else {
       alert('The File APIs are not fully supported in this browser.');
    }
 
-
+  /*
+       This Function is used to upload Files
+  */
   function handleFileSelect(evt) {
     var files = evt.target.files; // FileList object
 
@@ -325,6 +505,9 @@
 
   }
 
+  /*
+       This Function is used to clear previous upload files
+  */
   function loadstart(evt)
   {
     var oTable = document.getElementById('mytab');
@@ -337,17 +520,23 @@
     }
   }
 
+  /*
+       This Function is used to read N-quad files
+  */
   function loadednq(evt) {  
         var fileString = evt.target.result; 
         var item = fileString.split('\n');
         for(var i=0; i<item.length; i++)
         {
+
+          // Chnage Characters which are not compatible with html
           var traslate_str =  unescape(item[i].replace(/\\u/gim,"%u").replace(/\\"/gim,'%inquo').replace(/\</gim,'%lt').replace(/\>/gim,'%gt').replace(/%20/gim,'%blank').replace(/\^\^/gim,''));
           traslate_str = traslate_str.replace(/\\n/gim,'<br>');
           var sub_ind;
           var sub_ind_quote;
           var subject;
-        	//var sub_ind = traslate_str.search(" ");
+
+          // extract subject
           if(traslate_str.charAt(0) === '<')
           {
             sub_ind = traslate_str.search(" ");
@@ -373,6 +562,7 @@
           }
           subject = subject.replace(/%inquo/gim,'\"').replace(/%lt/gim,'&lt;').replace(/%gt/,'&gt;').replace(/%blank/,' ');
 
+          //extract predicate
           var string_withour_sub;
           if(sub_ind === 0) 
             {
@@ -407,7 +597,7 @@
           }
           predicate = predicate.replace(/%inquo/gim,'\"').replace(/%lt/gim,'&lt;').replace(/%gt/gim,'&gt;').replace(/%blank/,' ');
 
-
+          // extract object
           var string_without_pres;
           if(pred_ind === 0) 
             {
@@ -442,7 +632,7 @@
           }
           object = object.replace(/%inquo/gim,'\"').replace(/%lt/gim,'&lt;').replace(/%gt/gim,'&gt;').replace(/%blank/,' ');
 
-
+          // extract graph name
           var string_without_obj;
           if(obj_ind === 0) 
             {
@@ -477,7 +667,7 @@
           }
           graphname = graphname.replace(/%inquo/gim,'\"').replace(/%lt/gim,'&lt;').replace(/%gt/gim,'&gt;').replace(/%blank/,' ');
          
-
+          // show all stuff
          if(subject.length>0)
         {
         	        var oTable = document.getElementById('mytab');
@@ -528,6 +718,7 @@
         var item = fileString.split('\n');
         for(var i=0; i<item.length; i++)
         {
+           // Chnage Characters which are not compatible with html          
           var traslate_str =  unescape(item[i].replace(/\\u/gim,"%u").replace(/\\n/gim,"<br>").replace(/\\"/gim,'%inquo').replace(/\</gim,'%lt').replace(/\>/gim,'%gt').replace(/%20/gim,'%blank').replace(/\^\^/gim,''));
           var sub_ind;
           var sub_ind_quote;
