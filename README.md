@@ -19,7 +19,7 @@ Currently, it CAN do:
 
 6. Export data: Just Click "Save" and it will automatically download "webeditor_export.nq". It also works fine with Sesame Server. Just create a new repository and add this file to the server. Then Sesame Server will automatically upload and read this file.
 
-7. Show terms more like human-way with standard ontology and easily change back. You can edit(add/delete) the standard ontology you would like you show. Click "apply" to the show the result and Click "FullURI" to show original full URI. It will still show full URI in exporting files.
+7. Show terms more like human-way with standard ontologies and can easily change back. You can edit(add/delete) the prefix to represent standard ontology. Click "apply" to the show the result and Click "FullURI" to show original full URI. It will still show full URI in exporting files.
 
 
 Web Browser Compatibility:
