@@ -21,6 +21,9 @@ Currently, it CAN do:
 
 7. Show terms more like human-way with standard ontologies and can easily change back. You can edit(add/delete) the prefix to represent standard ontology. Click "apply" to the show the result and Click "FullURI" to show original full URI. It will still show full URI in exporting files.
 
+Work Flow with Editor:
+Choose file you want to import --> Edit prefix --> Click "Apply" --> Edit N-Quads/Triples --> Export
+
 
 Web Browser Compatibility:
 
