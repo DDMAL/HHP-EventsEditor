@@ -23,7 +23,7 @@ Currently, it CAN do:
 
 The current workflow:
 
-   import N-quad/triple file --> edit(add/delete) or keep default prefix list --> 'apply' --> edit N-quad/triple terms --> export file
+    import N-quad/triple file --> edit(add/delete) or keep default prefix list --> 'apply' --> edit N-quad/triple terms --> export file
 
 Web Browser Compatibility:
 
