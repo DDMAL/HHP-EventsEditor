@@ -1,5 +1,5 @@
 body,table{
-	font-size:12px;
+	font-size:13px;
 }
 table{
 	table-layout:fixed;
@@ -38,7 +38,7 @@ h1,h2,h3{
 
 
 table.t2{
-	border:3px solid #9db3c5;
+	border:4px solid #9db3c5;
 	color:#666;
 }
 table.t2 th {
