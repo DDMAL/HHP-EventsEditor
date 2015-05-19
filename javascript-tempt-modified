@@ -41,7 +41,7 @@
             for (var j = 0; j < prefixBody.rows.length; j++)
                 prefixList[j] = new Array(prefixBody.rows[j].cells[0].innerHTML,prefixBody.rows[j].cells[1].innerHTML);
 
-            var tableObject = document.getElementById("mytab"),
+            var tableObject = document.getElementById("mytable"),
                 oTbody = tableObject.tBodies[0];
 
             for (var i = 0; i < oTbody.rows.length; i++)
