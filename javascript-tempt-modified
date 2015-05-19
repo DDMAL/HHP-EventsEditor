@@ -41,7 +41,7 @@
             for (var j = 0; j < prefixBody.rows.length; j++)
                 prefixList[j] = new Array(prefixBody.rows[j].cells[0].innerHTML,prefixBody.rows[j].cells[1].innerHTML);
 
-            var tableObject = document.getElementById("mytable"),
+            var tableObject = document.getElementById("mytab"),
                 ontologyBody = tableObject.tBodies[0];
 
             for (var i = 0; i < ontologyBody.rows.length; i++)
@@ -49,7 +49,7 @@
                 for (var j = 0; j < 4; j++)  
                 {
                     for (var k = 0; k < prefixList.length; k++)
-                        ontologyBody.rows[i].cells[j].innerHTML = ontologyBody.rows[i].cells[j].innerHTML.replace(prefixList[k][1],prefixList[k][0]);
+                        ontologyBody.rows[i].cells[j].innerHTML = oTbody.rows[i].cells[j].innerHTML.replace(prefixList[k][1],prefixList[k][0]);
                 }
             }
         }
@@ -59,14 +59,14 @@
         {
             var prefixBody = document.getElementById("prefixbody"),
                 tableObject = document.getElementById("mytable"),
-                oTbody = tableObject.tBodies[0];
+                ontologyBody = tableObject.tBodies[0];
 
-            for (var i = 0; i < oTbody.rows.length; i++)
+            for (var i = 0; i < ontologyBody.rows.length; i++)
             {
                 for (var j = 0; j < 4; j++)
                 {
                     for (var k = 0; k < prefixList.length; k++)
-                        oTbody.rows[i].cells[j].innerHTML = oTbody.rows[i].cells[j].innerHTML.replace(prefixList[k][0],prefixList[k][1]);
+                        ontologyBody.rows[i].cells[j].innerHTML = ontologyBody.rows[i].cells[j].innerHTML.replace(prefixList[k][0],prefixList[k][1]);
                 }
             }
         }
@@ -161,8 +161,8 @@
         */
         function addPrefixRow()
         {
-            var oTbody = document.getElementById("prefixbody"),
-                newRow = oTbody.insertRow(oTbody.rows.length),
+            var ontologyBody = document.getElementById("prefixbody"),
+                newRow = ontologyBody.insertRow(ontologyBody.rows.length),
                 cell1 = newRow.insertCell(0),
                 cell2 = newRow.insertCell(1),
                 cell3 = newRow.insertCell(2),
@@ -183,9 +183,9 @@
         {
              //  Get table element in html          
             var tableObject = document.getElementById("mytable"),
-                oTbody = tableObject.tBodies[0],
+                ontologyBody = tableObject.tBodies[0],
         //  Set Row Attribute
-                row = oTbody.insertRow(oTbody.rows.length),
+                row = ontologyBody.insertRow(ontologyBody.rows.length),
                 attribute_0=document.createAttribute("class");
 
             attribute_0.value="a1"; 
@@ -300,8 +300,8 @@
         function tableSort(object)
         {
             // Get the table body
-            var oTable = document.getElementById('mytab'),
-                oTbody = oTable.tBodies[0],
+            var oTable = document.getElementById('mytable'),
+                ontologyBody = oTable.tBodies[0],
                 arr = [],
                 sortcolum;
 
@@ -321,8 +321,8 @@
                     break;
             }
 
-            for (var i = 0; i < oTbody.rows.length; i++ )
-                arr[i] = oTbody.rows[i];
+            for (var i = 0; i < ontologyBody.rows.length; i++ )
+                arr[i] = ontologyBody.rows[i];
                 
             arr.sort(
             function(td1, td2)
