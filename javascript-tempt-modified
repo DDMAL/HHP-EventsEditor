@@ -42,14 +42,14 @@
                 prefixList[j] = new Array(prefixBody.rows[j].cells[0].innerHTML,prefixBody.rows[j].cells[1].innerHTML);
 
             var tableObject = document.getElementById("mytable"),
-                oTbody = tableObject.tBodies[0];
+                ontologyBody = tableObject.tBodies[0];
 
-            for (var i = 0; i < oTbody.rows.length; i++)
+            for (var i = 0; i < ontologyBody.rows.length; i++)
             {
                 for (var j = 0; j < 4; j++)  
                 {
                     for (var k = 0; k < prefixList.length; k++)
-                        oTbody.rows[i].cells[j].innerHTML = oTbody.rows[i].cells[j].innerHTML.replace(prefixList[k][1],prefixList[k][0]);
+                        ontologyBody.rows[i].cells[j].innerHTML = ontologyBody.rows[i].cells[j].innerHTML.replace(prefixList[k][1],prefixList[k][0]);
                 }
             }
         }
