@@ -39,7 +39,7 @@
             var prefixbBody = document.getElementById("prefixbody");
 
             for (var j = 0; j < prefixBody.rows.length; j++)
-               prefixList[j] = new Array(prefixBody.rows[j].cells[0].innerHTML,prefixBody.rows[j].cells[1].innerHTML);
+                prefixList[j] = new Array(prefixBody.rows[j].cells[0].innerHTML,prefixBody.rows[j].cells[1].innerHTML);
 
             var tableObject = document.getElementById("mytab"),
                 oTbody = tableObject.tBodies[0];
