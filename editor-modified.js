@@ -67,10 +67,10 @@
             {
                 var source = object.innerHTML,
                 // These are good parameters after test
-                    rows_num = object.offsetHeight/12;
+                    rows_num = object.offsetHeight/12,
                     cols_num = object.offsetWidth/8;
                 
-                object.innerHTML = "<textarea rows="+rows_num+ " cols="+cols_num+" onkeydown='showKeyCode(event,this)'>"+source+"</textarea>";
+                object.innerHTML = "<textarea rows=" + rows_num + " cols="+cols_num+" onkeydown='showKeyCode(event,this)'>" + source + "</textarea>";
                 underEdit = true;
                 object.focus();
             }
@@ -157,14 +157,14 @@
         /*
             This Function is used to add one row in table
         */
-        function addRow(source, subject, predicate, object, graphName)
+        function addRow(source, subject, predicate, object, graphName, index)
         {        
             var myTable = document.getElementById("myTable"),
                 ontologyBody = myTable.tBodies[0],
                 newRow = ontologyBody.insertRow(ontologyBody.rows.length),
                 attribute_0=document.createAttribute("class");
 
-            attribute_0.value="a1"; 
+            attribute_0.value = "a1"; 
             newRow.setAttributeNode(attribute_0);
 
             var cell_1 = newRow.insertCell(0),
@@ -172,31 +172,33 @@
                 cell_3 = newRow.insertCell(2),
                 cell_4 = newRow.insertCell(3),
                 cell_5 = newRow.insertCell(4),
-                attribute_1=document.createAttribute("ondblclick"),
-                attribute_2=document.createAttribute("ondblclick"),
-                attribute_3=document.createAttribute("ondblclick"),
-                attribute_4=document.createAttribute("ondblclick");
+                cell_6 = newRow.insertCell(5),
+                attribute_2 = document.createAttribute("ondblclick"),
+                attribute_3 = document.createAttribute("ondblclick"),
+                attribute_4 = document.createAttribute("ondblclick");
+                attribute_5 = document.createAttribute("ondblclick"),
 
-            attribute_1.value="createTextArea(this)";
-            attribute_2.value="createTextArea(this)";
-            attribute_3.value="createTextArea(this)"; 
-            attribute_4.value="createTextArea(this)"; 
+            attribute_2.value = "createTextArea(this)";
+            attribute_3.value = "createTextArea(this)"; 
+            attribute_4.value = "createTextArea(this)";
+            attribute_5.value = "createTextArea(this)";
                 
-            cell_1.setAttributeNode(attribute_1);
+            cell_1.innerHTML = index;
             cell_2.setAttributeNode(attribute_2);
             cell_3.setAttributeNode(attribute_3);
             cell_4.setAttributeNode(attribute_4);
-            cell_5.innerHTML = "<td align='center'><input type='checkbox' name='tableCheck' style='width:20px' /></td>";
+            cell_5.setAttributeNode(attribute_5);
+            cell_6.innerHTML = "<td align='center'><input type='checkbox' name='tableCheck' style='width:20px' /></td>";
 
             if (source !== "empty")
             {
-                cell_1.innerHTML = subject;
-                cell_2.innerHTML = predicate;
-                cell_3.innerHTML = object;
+                cell_2.innerHTML = subject;
+                cell_3.innerHTML = predicate;
+                cell_4.innerHTML = object;
 
                 if (source === "nq")
                 {
-                    cell_4.innerHTML = graphName;
+                    cell_5.innerHTML = graphName;
                 }
             }
         }
@@ -264,32 +266,48 @@
 
             switch (object.innerHTML)
             {
+                case "Index":
+                    column = 0;
+                    break;
                 case "Graph Name":
-                    column = 3;
+                    column = 4;
                     break;
                 case "Object":
-                    column = 2;
+                    column = 3;
                     break;
                 case "Predicate":
-                    column = 1;
+                    column = 2;
                     break;
                 case "Subject":
-                    column = 0;
+                    column = 1;
                     break;
             }
 
             for (var i = 0; i < ontologyBody.rows.length; i++ )
                 buffer[i] = ontologyBody.rows[i];
-                
-            buffer.sort(
-            function(item_1, item_2)
-            {
-                if (isAscendant)
-                    return item_1.cells[column].innerHTML.localeCompare(item_2.cells[column].innerHTML);
-                else
-                    return item_2.cells[column].innerHTML.localeCompare(item_1.cells[column].innerHTML);
+            
+            if (column !== 0)   
+                buffer.sort(function(item_1, item_2)
+                {
+                    if (isAscendant)
+                        return item_1.cells[column].innerHTML.localeCompare(item_2.cells[column].innerHTML);
+                    else
+                        return item_2.cells[column].innerHTML.localeCompare(item_1.cells[column].innerHTML);
                 }
-            );
+                )
+            else if (isAscendant)
+                buffer.sort(function(item_1, item_2)
+                {
+                    return item_1.cells[column].innerHTML - item_2.cells[column].innerHTML;
+                }
+                )
+            else
+                buffer.sort(function(item_1, item_2)
+                {
+                    return item_2.cells[column].innerHTML - item_1.cells[column].innerHTML;
+                }
+                )
+
 
             for (var j = 0; j < buffer.length; j++)
                 ontologyBody.appendChild(buffer[j]);
@@ -303,38 +321,40 @@
             var myTable = document.getElementById("myTable"),
                 ontologyBody = myTable.tBodies[0],
                 valueArray = new Array();
-
+            
             for (var i = 0; i < ontologyBody.rows.length; i++)
             {
-                for (var j = 0; j < 4; j++)
+                for (var j = 1; j < 5; j++)
                 {
                     for (var k = 0; k < prefixList.length; k++)
                         ontologyBody.rows[i].cells[j].innerHTML = ontologyBody.rows[i].cells[j].innerHTML.replace(prefixList[k][0],prefixList[k][1]);
-                  
+
                     var content = ontologyBody.rows[i].cells[j].innerHTML.replace('&lt;','<').replace(/<br>/gim,'\n').replace('&gt;','>');
      
                     content = escape(content);
                     content = content.replace(/%u/gim,'\\u').replace(/\"\</gim,'&lt;').replace(/%3/gim,'\\3').replace(/%2/gim,'\\2');
                     content = content.replace(/%/gim,'\\u00').replace(/\\3/gim,'%3').replace(/\\2/gim,'%2');
                     content = unescape(content);
-                    subcontentIndex = content.lastIndexOf('"');
+                    var subcontentIndex = content.lastIndexOf('"');
                   
                     if (subcontentIndex !== -1)
                     {
-                        subcontent = content.substring(1,subcontentIndex).replace(/\"/gim,'\\"');
-                        subcontent2 = content.substring(subcontentIndex+1,content.length);
+                        subcontent = content.substring(1, subcontentIndex).replace(/\"/gim,'\\"');
+                        subcontent2 = content.substring(subcontentIndex + 1, content.length);
                     
-                        if (content.charAt(subcontentIndex+1) === '<')
-                            content = content.charAt(0).concat(subcontent).concat('"^^').concat(subcontent2).concat(content.charAt(content.length+1));
+                        if (content.charAt(subcontentIndex + 1) === '<')
+                            content = content.charAt(0).concat(subcontent).concat('"^^').concat(subcontent2).concat(content.charAt(content.length + 1));
                         else
-                            content = content.charAt(0)+subcontent+'"'+subcontent2+content.charAt(content.length+1);
+                            content = content.charAt(0) + subcontent + '"' + subcontent2 + content.charAt(content.length + 1);
                     }
                   
-                    valueArray.push(content).push(' ');
+                    valueArray.push(content);
+                    valueArray.push(' ');
                 }
-                valueArray.push('.').push('\n');
+                valueArray.push('.');
+                valueArray.push('\n');
             }
-            exportFile(valueArray.join(''), "n/a", "WebEditor_Export.nq");   
+            exportFile(valueArray.join(''), "n/a", "WebEditor_Export.nq");
         }
 
         /*
@@ -394,9 +414,9 @@
 
             var reader = new FileReader();
             reader.readAsText(files[0]); 
-            var extensible_index = files[0].name.lastIndexOf("."),
-                extensible_length = files[0].name.length,
-                extensible = files[0].name.substring(extensible_index + 1,extensible_length);
+            var extensibleIndex = files[0].name.lastIndexOf("."),
+                extensibleLength = files[0].name.length,
+                extensible = files[0].name.substring(extensibleIndex + 1, extensibleLength);
 
             if (extensible === "nq") 
             {
@@ -418,7 +438,7 @@
         function loadStart()
         {
             var myTable= document.getElementById('myTable'),
-                ontologyBody = ontologyBody.tBodies[0];
+                ontologyBody = myTable.tBodies[0];
 
             while (ontologyBody.rows.length != 0)
                 ontologyBody.deleteRow();
@@ -433,59 +453,58 @@
             if (string.charAt(0) === '<')
             {
                 outputTail = string.search(" ");
-                output = '&lt;'+string.substring(1,outputTail-1)+'&gt;';
+                output = '&lt;'+string.substring(1, outputTail - 1) + '&gt;';
             }
             else if (string.charAt(0) === '"')
             {
                 var quote = string.substr(1).search('\"'),
-                    tempt = string.substr(1).substr(quote+1),
+                    tempt = string.substr(1).substr(quote + 1),
                     blankIndex = tempt.search(' ');
 
-                tempt = tempt.substring(0,blankIndex);
+                tempt = tempt.substring(0, blankIndex);
 
-                output = string.substring(0,quote+2).concat(tempt);
+                output = string.substring(0, quote + 2).concat(tempt);
                 quote += blankIndex;
-                outputTail=0;
+                outputTail = 0;
             }
             else 
             {
                 outputTail = string.search(" ");
-                output = string.substring(0,outputTail);
+                output = string.substring(0, outputTail);
             }
-
-            output=output.replace(/%inquo/gim,'\"').replace(/%lt/gim,'&lt;').replace(/%gt/,'&gt;').replace(/%blank/,' ');
-
+            
+            output = output.replace(/%inquo/gim,'\"').replace(/%lt/gim,'&lt;').replace(/%gt/gim,'&gt;').replace(/%blank/,' ');
             return Array(output, outputTail, quote);
         }
 
-        function loadItem(source,string)
+        function loadItem(source, string)
         {
-            var subjectLoad=extractAttribute(string),
-                subject=subjectLoad[0],
-                subjectIndex=subjectLoad[1],
-                subjectQuote=subjectLoad[2],
-                predicateString = (subjectIndex === 0) ? string.substr(subjectQuote+3):string.substr(subjectIndex+1);
+            var subjectLoad = extractAttribute(string),
+                subject = subjectLoad[0],
+                subjectIndex = subjectLoad[1],
+                subjectQuote = subjectLoad[2],
+                predicateString = (subjectIndex === 0) ? string.substr(subjectQuote + 3) : string.substr(subjectIndex + 1);
 
-            var predicateLoad=extractAttribute(predicateString),
-                predicate=predicateLoad[0],
-                predicateIndex=predicateLoad[1],
-                predicateQuote=predicateLoad[2],
-                objectString = (predicateIndex === 0) ? string.substr(predicateQuote+3):string.substr(predicateIndex+1);
+            var predicateLoad = extractAttribute(predicateString),
+                predicate = predicateLoad[0],
+                predicateIndex = predicateLoad[1],
+                predicateQuote = predicateLoad[2],
+                objectString = (predicateIndex === 0) ? predicateString.substr(predicateQuote + 3) : predicateString.substr(predicateIndex + 1);
 
-            var objectLoad=extractAttribute(objectString),
-                object=objectLoad[0],
-                objectIndex=objectLoad[1],
-                objectQuote=objectLoad[2],
-                graphString = (objectIndex === 0) ? string.substr(objectQuote+3):string.substr(objectIndex+1);
+            var objectLoad = extractAttribute(objectString),
+                object = objectLoad[0],
+                objectIndex = objectLoad[1],
+                objectQuote = objectLoad[2],
+                graphString = (objectIndex === 0) ? objectString.substr(objectQuote + 3) : objectString.substr(objectIndex + 1);
 
             if (source === "nq")
             {
-                var graphLoad=extractAttribute(graphString),
-                    graphName=graphLoad[0];
+                var graphLoad = extractAttribute(graphString),
+                    graphName = graphLoad[0];
             }
             else
             {
-                var graphName="Empty";
+                var graphName = "Empty";
             }
 
             return Array(subject, predicate, object, graphName);
@@ -494,40 +513,42 @@
         function nqLoad(evt)
         {  
             var fileString = evt.target.result, 
-                item = fileString.split('\n');
+                tuples = fileString.split('\n');
 
-            for (var i = 0; i < item.length; i++)
+            for (var i = 0; i < tuples.length; i++)
             {
-                var loadString = (unescape(item[i].replace(/\\u/gim,"%u").replace(/\\"/gim,'%inquo').replace(/\</gim,'%lt').
+                var loadString = (unescape(tuples[i].replace(/\\u/gim,"%u").replace(/\\"/gim,'%inquo').replace(/\</gim,'%lt').
                                   replace(/\>/gim,'%gt').replace(/%20/gim,'%blank').replace(/\^\^/gim,''))).replace(/\\n/gim,'<br>'),
-                    tuple=loadItem("nq",loadString),
-                    subject=tuple[0],
-                    predicate=tuple[1],
-                    object=tuple[2],
-                    graphName=tuple[3];
+                    tuple = loadItem("nq",loadString),
+                    subject = tuple[0],
+                    predicate = tuple[1],
+                    object = tuple[2],
+                    graphName = tuple[3],
+                    index = i + 1;
 
-                if (subject.length>0)
-                    addRow("nq", subject, predicate, object, graphName);
+                if (subject.length > 0)
+                    addRow("nq", subject, predicate, object, graphName, index);
             }
         }
 
         function ntLoad(evt)
         {  
             var fileString = evt.target.result, 
-                item = fileString.split('\n');
+                tuples = fileString.split('\n');
 
-            for (var i = 0; i < item.length; i++)
+            for (var i = 0; i < tuples.length; i++)
             {
-                var loadString = unescape(item[i].replace(/\\u/gim,"%u").replace(/\\n/gim,"<br>").replace(/\\"/gim,'%inquo').
+                var loadString = unescape(tuples[i].replace(/\\u/gim,"%u").replace(/\\n/gim,"<br>").replace(/\\"/gim,'%inquo').
                                           replace(/\</gim,'%lt').replace(/\>/gim,'%gt').replace(/%20/gim,'%blank').replace(/\^\^/gim,'')),
-                    tuple=loadItem("nt",loadString),
-                    subject=tuple[0],
-                    predicate=tuple[1],
-                    object=tuple[2],
-                    graphName=tuple[3];
+                    tuple = loadItem("nt",loadString),
+                    subject = tuple[0],
+                    predicate = tuple[1],
+                    object = tuple[2],
+                    graphName = tuple[3],
+                    index = i + 1;
 
-                if (subject.length>0)
-                    addRow("nt", subject, predicate, object, graphName);
+                if (subject.length > 0)
+                    addRow("nt", subject, predicate, object, graphName, index);
             }
         }
  
