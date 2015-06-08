@@ -12,9 +12,10 @@ The modification is in:
 
 3. Add index to imported table. 
 
-
 Log of previous version --
+
 Currently, it CAN do:
+
 1. Sorting : Just click the header of each column. The whole table will be sorted according this column. Second click will be "descent sorting".
 
 2. Edit Cell Content:  Double-click the cell you want to edit -> Edit it -> Press "Enter" to save the revision;
