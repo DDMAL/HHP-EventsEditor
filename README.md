@@ -5,6 +5,7 @@ Human History Project: Events Editor
 
 Current Version: 2015.06.08
 The modification is in:
+
 1. Clean the code.
 
 2. Select all/Unselect: Click on the Select button it will select-all or undo select-all
