@@ -3,29 +3,28 @@
 <head>
 <link rel="stylesheet" href="./css/style2.css" type="text/css" id="" media="print, projection, screen" />
 </head>
-
-<body onload="loadprefix()">
+<body>
 <div class="title">
   <h1>RDF Web Editor Test Version</h1>
 </div>
 
-<table width="90%" id="mytab0"  border="1" class="t2">
+<table width="90%" border="1" class="t2">
   <tr>
     <td>
     <input type="file" value="import data" id="files" name="files[]"/><br>
     <output id="list"></output>
-    <input type="button" id="savetext" class='btn blue' value="Export" onclick="Save()"/></div>  
+    <input type="button" id="saveText" class='btn blue' value="Export" onclick="save()"/></div>  
     </td>
     <td>
-      <table width="95%" id="myprefixtab"  border="1" class="t3" style="word-break:break-all; word-wrap:break-all;">
+      <table width="95%" id="headerTable" border="1" class="t3" style="word-break:break-all; word-wrap:break-all;">
       <thead>
       <tr>
         <th width="10%">Prefix</th>
         <th width="25%">Namespace</th>
-        <th width="5%">Delete</th>
+        <th width="5%" onclick="selectAll('prefixTable')">Select</th>
       </tr>
       </thead>
-      <tbody id="prefixbody">
+      <tbody id="prefixTable">
       </tbody>
       </table>
       <table width="90%" align="center" class="t4">
@@ -45,23 +44,24 @@
           <td></td>
           <td></td>
           <td></td>
-          <td></td>
-          <td><input name="xx" class='btn pink' type="button" value="Apply" onclick="applyontology()"/></td>
-          <td><input name="xx" class='btn pink' type="button" value="FullURI" onclick="removeontology()"/></td>
+          <td>Prefix/URI Switch:</td>
+          <td><input name="xx" class='btn pink' type="button" value="Prefix" onclick="applyOntology()"/></td>
+          <td><input name="xx" class='btn pink' type="button" value="Full URL" onclick="removeOntology()"/></td>
         </tr>
      </table>
     </td>
   </tr>
 </table>
 <br><br>
-<table width="90%" id="mytab"  border="1" class="t2" style="word-break:break-all; word-wrap:break-all;">
+<table width="90%" id="myTable"  border="1" class="t2" style="word-break:break-all; word-wrap:break-all;">
   <thead>
   	<tr>
-    <th width="25%" onclick="tablesort(this)">Subject</th>
-    <th width="25%" onclick="tablesort(this)">Predicate</th>
-    <th width="25%" onclick="tablesort(this)">Object</th>
-    <th width="25%" onclick="tablesort(this)">Graph Name</th>
-    <th width="5%">Delete</th>
+    <th width="4%" onclick="tableSort(this)">Index</th>
+    <th width="25%" onclick="tableSort(this)">Subject</th>
+    <th width="25%" onclick="tableSort(this)">Predicate</th>
+    <th width="25%" onclick="tableSort(this)">Object</th>
+    <th width="25%" onclick="tableSort(this)">Graph Name</th>
+    <th width="4%" onclick="selectAll('myTable')">Select</th>
    </tr>
   </thead>
 	<tbody>
@@ -96,7 +96,9 @@
     <td></td>
     <td></td>
     <td></td>
-    <td><input name="xx" class='btn blue' type="button" value="Add" onclick="addRow()"/></td>
+    <td></td>
+    <td></td>
+    <td><input name="xx" class='btn blue' type="button" value="Add" onclick="addRow('empty')"/></td>
     <td><input name="xx" class='btn blue' type="button" value="Delete" onclick="removeRow()"/></td>
   </tr>
 </table>
@@ -104,20 +106,3 @@
 </body>
 </html>
 <script type="text/javascript" src="./javascript/editor.js"></script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
