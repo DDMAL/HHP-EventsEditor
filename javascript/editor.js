@@ -190,6 +190,11 @@
             cell_5.setAttributeNode(attribute_5);
             cell_6.innerHTML = "<td align='center'><input type='checkbox' name='tableCheck' style='width:20px' /></td>";
 
+            if (source === "empty")
+            {
+                cell_1.innerHTML = ontologyBody.getElementsByTagName('tr').length
+            }
+            
             if (source !== "empty")
             {
                 cell_2.innerHTML = subject;
