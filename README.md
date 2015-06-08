@@ -3,9 +3,19 @@ HHP-EventsEditor
 
 Human History Project: Events Editor
 
-Current Version: 2014.06.12
+Current Version: 2015.06.08
+The modification is in:
+
+1. Clean the code.
+
+2. Select all/Unselect: Click on the Select button it will select-all or undo select-all
+
+3. Add index to imported table. 
+
+Log of previous version --
 
 Currently, it CAN do:
+
 1. Sorting : Just click the header of each column. The whole table will be sorted according this column. Second click will be "descent sorting".
 
 2. Edit Cell Content:  Double-click the cell you want to edit -> Edit it -> Press "Enter" to save the revision;
