@@ -2,8 +2,15 @@ var editor_func = function()
 {
         // prefixList is used to store prefix 
         var prefixList =  new Array();
+        // Indicate whether html is under edit
+        var underEdit = false;
+        // Indicate current order mode
+        var isAscendant = true;
 
-        var addRow = function(source, subject, predicate, object, graphName, index)
+        var prefixSelectState = 0,
+            mytableSelectState = 0;
+
+        function addRow(source, subject, predicate, object, graphName, index)
         {        
                  var myTable = document.getElementById("myTable"),
                      ontologyBody = myTable.tBodies[0],
@@ -24,10 +31,10 @@ var editor_func = function()
                      attribute_4 = document.createAttribute("ondblclick");
                      attribute_5 = document.createAttribute("ondblclick"),     
 
-                 attribute_2.value = "createTextArea(this)";
-                 attribute_3.value = "createTextArea(this)"; 
-                 attribute_4.value = "createTextArea(this)";
-                 attribute_5.value = "createTextArea(this)";
+                 attribute_2.value = "editor_func.createTextArea(this)";
+                 attribute_3.value = "editor_func.createTextArea(this)"; 
+                 attribute_4.value = "editor_func.createTextArea(this)";
+                 attribute_5.value = "editor_func.createTextArea(this)";
                      
                  cell_1.innerHTML = index;
                  cell_2.setAttributeNode(attribute_2);
@@ -53,102 +60,7 @@ var editor_func = function()
                      }
                  }
          }    
-       
-        // Indicate whether html is under edit
-        var underEdit = false;
-        // Indicate current order mode
-        var isAscendant = true;
-
         
-        // This Function is used to change cell to edit mode
-        
-        function createTextArea(object)
-        {
-            if (!underEdit)
-            {
-                var source = object.innerHTML,
-                // These are good parameters after test
-                    rows_num = object.offsetHeight/12,
-                    cols_num = object.offsetWidth/8;
-                
-                object.innerHTML = "<textarea rows=" + rows_num + " cols="+cols_num+" onkeydown='showKeyCode(event,this)'>" + source + "</textarea>";
-                underEdit = true;
-                object.focus();
-            }
-        }
-
-        
-        // This Function is used to finish editing the cell
-        
-        function showKeyCode(evt,object)
-        {
-            if (evt.keyCode == 13)
-            {
-                var tempt = object.value;
-              
-                if (tempt.charAt(0) === '<')
-                {
-                    var tempt1 = '&lt;'+tempt.substring(1,tempt.length);
-                    
-                    if (tempt.charAt(tempt.length) === '>')
-                        tempt1 = tempt.substring(0,tempt.length-1)+'&gt;';
-
-                    object.parentNode.innerHTML = tempt1;
-                }
-                else
-                    object.parentNode.innerHTML = tempt.replace("<","&lt").replace(">","&gt");
-            }
-            
-            underEdit = false;
-        }
-        
-       
-
-        var prefixSelectState = 0,
-            mytableSelectState = 0;
-
-
-        function save()
-        { 
-            var myTable = document.getElementById("myTable"),
-                ontologyBody = myTable.tBodies[0],
-                valueArray = new Array();
-            
-            for (var i = 0; i < ontologyBody.rows.length; i++)
-            {
-                for (var j = 1; j < 5; j++)
-                {
-                    for (var k = 0; k < prefixList.length; k++)
-                        ontologyBody.rows[i].cells[j].innerHTML = ontologyBody.rows[i].cells[j].innerHTML.replace(prefixList[k][0],prefixList[k][1]);
-
-                    var content = ontologyBody.rows[i].cells[j].innerHTML.replace('&lt;','<').replace(/<br>/gim,'\n').replace('&gt;','>');
-     
-                    content = escape(content);
-                    content = content.replace(/%u/gim,'\\u').replace(/\"\</gim,'&lt;').replace(/%3/gim,'\\3').replace(/%2/gim,'\\2');
-                    content = content.replace(/%/gim,'\\u00').replace(/\\3/gim,'%3').replace(/\\2/gim,'%2');
-                    content = unescape(content);
-                    var subcontentIndex = content.lastIndexOf('"');
-                  
-                    if (subcontentIndex !== -1)
-                    {
-                        subcontent = content.substring(1, subcontentIndex).replace(/\"/gim,'\\"');
-                        subcontent2 = content.substring(subcontentIndex + 1, content.length);
-                    
-                        if (content.charAt(subcontentIndex + 1) === '<')
-                            content = content.charAt(0).concat(subcontent).concat('"^^').concat(subcontent2).concat(content.charAt(content.length + 1));
-                        else
-                            content = content.charAt(0) + subcontent + '"' + subcontent2 + content.charAt(content.length + 1);
-                    }
-                  
-                    valueArray.push(content);
-                    valueArray.push(' ');
-                }
-                valueArray.push('.');
-                valueArray.push('\n');
-            }
-            exportFile(valueArray.join(''), "n/a", "WebEditor_Export.nq");
-        }
-
         //This Function is used to handle files export
         function exportFile(value, type, name)
         {  
@@ -224,8 +136,7 @@ var editor_func = function()
 
             document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
         }
-  
-        
+          
         //This Function is used to clear previous upload files
         function loadStart()
         {
@@ -424,8 +335,8 @@ var editor_func = function()
                 attribute_1=document.createAttribute("ondblclick"),
                 attribute_2=document.createAttribute("ondblclick");
 
-            attribute_1.value="createTextArea(this)";
-            attribute_2.value="createTextArea(this)";
+            attribute_1.value="editor_func.createTextArea(this)";
+            attribute_2.value="editor_func.createTextArea(this)";
             cell1.setAttributeNode(attribute_1);
             cell2.setAttributeNode(attribute_2);
             cell3.innerHTML = "<td align='center'><input type='checkbox' name='prefixCheck' style='width:20px' /></td>";
@@ -598,6 +509,87 @@ var editor_func = function()
                          k = -1;
                      }
                  }
+             },
+
+             save: function()
+             { 
+                 var myTable = document.getElementById("myTable"),
+                     ontologyBody = myTable.tBodies[0],
+                     valueArray = new Array();
+                 
+                 for (var i = 0; i < ontologyBody.rows.length; i++)
+                 {
+                     for (var j = 1; j < 5; j++)
+                     {
+                         for (var k = 0; k < prefixList.length; k++)
+                             ontologyBody.rows[i].cells[j].innerHTML = ontologyBody.rows[i].cells[j].innerHTML.replace(prefixList[k][0],prefixList[k][1]);     
+
+                         var content = ontologyBody.rows[i].cells[j].innerHTML.replace('&lt;','<').replace(/<br>/gim,'\n').replace('&gt;','>');
+          
+                         content = escape(content);
+                         content = content.replace(/%u/gim,'\\u').replace(/\"\</gim,'&lt;').replace(/%3/gim,'\\3').replace(/%2/gim,'\\2');
+                         content = content.replace(/%/gim,'\\u00').replace(/\\3/gim,'%3').replace(/\\2/gim,'%2');
+                         content = unescape(content);
+                         var subcontentIndex = content.lastIndexOf('"');
+                       
+                         if (subcontentIndex !== -1)
+                         {
+                             subcontent = content.substring(1, subcontentIndex).replace(/\"/gim,'\\"');
+                             subcontent2 = content.substring(subcontentIndex + 1, content.length);
+                         
+                             if (content.charAt(subcontentIndex + 1) === '<')
+                                 content = content.charAt(0).concat(subcontent).concat('"^^').concat(subcontent2).concat(content.charAt(content.length + 1));
+                             else
+                                 content = content.charAt(0) + subcontent + '"' + subcontent2 + content.charAt(content.length + 1);
+                         }
+                       
+                         valueArray.push(content);
+                         valueArray.push(' ');
+                     }
+                     valueArray.push('.');
+                     valueArray.push('\n');
+                 }
+                 exportFile(valueArray.join(''), "n/a", "WebEditor_Export.nq");
+             },
+
+             // This Function is used to change cell to edit mode        
+             createTextArea: function(object)
+             {
+                 if (!underEdit)
+                 {
+                     var source = object.innerHTML,
+                     // These are good parameters after test
+                         rows_num = object.offsetHeight/12,
+                         cols_num = object.offsetWidth/8;
+                     
+                     object.innerHTML = "<textarea rows=" + rows_num + " cols="+cols_num+" onkeydown='editor_func.showKeyCode(event,this)'>" + source + "</textarea>";
+                     underEdit = true;
+                     object.focus();
+                 }
+             },
+
+             // This Function is used to finish editing the cell       
+             showKeyCode: function(evt,object)
+             {
+                 if (evt.keyCode == 13)
+                 {
+                     var tempt = object.value;
+                   
+                     if (tempt.charAt(0) === '<')
+                     {
+                         var tempt1 = '&lt;'+tempt.substring(1,tempt.length);
+                         
+                         if (tempt.charAt(tempt.length) === '>')
+                             tempt1 = tempt.substring(0,tempt.length-1)+'&gt;';     
+
+                         object.parentNode.innerHTML = tempt1;
+                     }
+                     else
+                         object.parentNode.innerHTML = tempt.replace("<","&lt").replace(">","&gt");
+                 }
+                 
+                 underEdit = false;
              }
+
         }
 }();
