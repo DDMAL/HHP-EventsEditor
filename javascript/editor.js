@@ -1,3 +1,5 @@
+    (function()
+        {
         // prefixList is used to store prefix 
         var prefixList =  new Array();
 
@@ -575,7 +577,7 @@
 
             for (var i = 0; i < tuples.length; i++)
             {   
-                if (counter == 3)
+                if (counter === 3)
                 {
                     counter = 0;
                     index++;
@@ -600,3 +602,4 @@
         }
 
         document.getElementById('files').addEventListener('change', handleFileSelect, false);
+        })()
