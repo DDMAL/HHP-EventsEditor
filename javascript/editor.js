@@ -433,6 +433,11 @@
                 reader.onloadstart = loadStart;
                 reader.onload = ntLoad;
             }
+            else if (extensible === "txt")
+            {
+                reader.onloadstart = loadStart;
+                reader.onload = txtLoad;
+            }
 
             document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
         }
@@ -556,6 +561,42 @@
                     addRow("nt", subject, predicate, object, graphName, index);
             }
         }
- 
+        
+        function txtLoad(evt)
+        {  
+            var subject = "",
+                predicate = "",
+                object = "",
+                graphName = "Empty",
+                index = 0,
+                fileString = evt.target.result, 
+                tuples = fileString.split('\n'),
+                counter = 0;
+
+            for (var i = 0; i < tuples.length; i++)
+            {   
+                if (counter == 3)
+                {
+                    counter = 0;
+                    index++;
+                    console.log(subject);
+                    addRow("txt", subject, predicate, object, graphName, index);
+                }
+
+                switch (counter)
+                {
+                    case 0:
+                        subject = tuples[i];
+                        break;
+                    case 1:
+                        predicate = tuples[i]
+                        break;
+                    case 2:
+                        object = tuples[i]
+                        break;
+                }
+                counter++;
+            }
+        }
 
         document.getElementById('files').addEventListener('change', handleFileSelect, false);
