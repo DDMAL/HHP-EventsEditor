@@ -6,9 +6,10 @@ var editor_func = function()
         var underEdit = false;
         // Indicate current order mode
         var isAscendant = true;
-
-        var prefixSelectState = 0,
-            mytableSelectState = 0;
+        // Indicate whether prefix table is selected for function selectAll
+        var prefixSelectState = 0;
+        // Indicate whether main table is selected for function selectAll
+        var mytableSelectState = 0;
 
         function addRow(source, subject, predicate, object, graphName, index)
         {        
