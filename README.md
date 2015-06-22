@@ -3,7 +3,7 @@ HHP-EventsEditor
 
 Human History Project: Events Editor
 
-Current Version: 2015.06.08
+Current Version: 2015.06.21
 The modification is in:
 
 1. Clean the code.
