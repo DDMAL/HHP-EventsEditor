@@ -3,7 +3,7 @@
 <head>
 <link rel="stylesheet" href="./css/style2.css" type="text/css" id="" media="print, projection, screen" />
 </head>
-<body>
+<body onload = editor_func.loadPrefix()>
 <div class="title">
   <h1>RDF Web Editor Test Version</h1>
 </div>
@@ -21,7 +21,7 @@
       <tr>
         <th width="10%">Prefix</th>
         <th width="25%">Namespace</th>
-        <th width="5%" onclick="selectAll('prefixTable')">Select</th>
+        <th width="5%" onclick="editor_func.selectAll('prefixTable')">Select</th>
       </tr>
       </thead>
       <tbody id="prefixTable">
@@ -35,8 +35,8 @@
           <td></td>
           <td></td>
           <td></td>
-          <td><input name="xx" class='btn green' type="button" value="Add" onclick="addPrefixRow()"/></td>
-          <td><input name="xx" class='btn green' type="button" value="Delete" onclick="removePrefixRow()"/></td>
+          <td><input name="xx" class='btn green' type="button" value="Add" onclick="editor_func.addPrefixRow()"/></td>
+          <td><input name="xx" class='btn green' type="button" value="Delete" onclick="editor_func.removePrefixRow()"/></td>
         </tr>
         <tr>
           <td></td>
@@ -45,8 +45,8 @@
           <td></td>
           <td></td>
           <td>Prefix/URI Switch:</td>
-          <td><input name="xx" class='btn pink' type="button" value="Prefix" onclick="applyOntology()"/></td>
-          <td><input name="xx" class='btn pink' type="button" value="Full URL" onclick="removeOntology()"/></td>
+          <td><input name="xx" class='btn pink' type="button" value="Prefix" onclick="editor_func.applyOntology()"/></td>
+          <td><input name="xx" class='btn pink' type="button" value="Full URL" onclick="editor_func.removeOntology()"/></td>
         </tr>
      </table>
     </td>
@@ -56,12 +56,12 @@
 <table width="90%" id="myTable"  border="1" class="t2" style="word-break:break-all; word-wrap:break-all;">
   <thead>
   	<tr>
-    <th width="4%" onclick="tableSort(this)">Index</th>
-    <th width="25%" onclick="tableSort(this)">Subject</th>
-    <th width="25%" onclick="tableSort(this)">Predicate</th>
-    <th width="25%" onclick="tableSort(this)">Object</th>
-    <th width="25%" onclick="tableSort(this)">Graph Name</th>
-    <th width="4%" onclick="selectAll('myTable')">Select</th>
+    <th width="4%" onclick="editor_func.tableSort(this)">Index</th>
+    <th width="25%" onclick="editor_func.tableSort(this)">Subject</th>
+    <th width="25%" onclick="editor_func.tableSort(this)">Predicate</th>
+    <th width="25%" onclick="editor_func.tableSort(this)">Object</th>
+    <th width="25%" onclick="editor_func.tableSort(this)">Graph Name</th>
+    <th width="4%" onclick="editor_func.selectAll('myTable')">Select</th>
    </tr>
   </thead>
 	<tbody>
@@ -98,8 +98,8 @@
     <td></td>
     <td></td>
     <td></td>
-    <td><input name="xx" class='btn blue' type="button" value="Add" onclick="addRow('empty')"/></td>
-    <td><input name="xx" class='btn blue' type="button" value="Delete" onclick="removeRow()"/></td>
+    <td><input name="xx" class='btn blue' type="button" value="Add" onclick="editor_func.public_addRow('empty')"/></td>
+    <td><input name="xx" class='btn blue' type="button" value="Delete" onclick="editor_func.removeRow()"/></td>
   </tr>
 </table>
 </div>

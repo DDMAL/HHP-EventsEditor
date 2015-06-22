@@ -1,58 +1,60 @@
-
+    var editor_func = function()
+        {
         // prefixList is used to store prefix 
         var prefixList =  new Array();
 
-        // Load the defaul prefix list
-        function loadPrefix()
-        {
-            prefixList = [Array("rdf:","http://www.w3.org/1999/02/22-rdf-syntax-ns#"),
-                          Array("rdfs:","http://www.w3.org/2000/01/rdf-schema#"),
-                          Array("foaf:","http://xmlns.com/foaf/0.1/"),
-                          Array("owl:","http://www.w3.org/2002/07/owl#"),
-                          Array("xsd:","http://www.w3.org/2001/XMLSchema#"),
-                          Array("Dbpedia-Owl:","http://dbpedia.org/ontology/"),
-                          Array("category:","http://dbpedia.org/resource/Category:"),
-                          Array("dbpedia:","http://dbpedia.org/resource/"),
-                          Array("dbpprop:","http://dbpedia.org/property/"), 
-                          Array("yago:","http://dbpedia.org/class/yago/"),
-                          Array("dcterms:","http://purl.org/dc/terms/")];       
+        var addRow = function(source, subject, predicate, object, graphName, index)
+        {        
+                 var myTable = document.getElementById("myTable"),
+                     ontologyBody = myTable.tBodies[0],
+                     newRow = ontologyBody.insertRow(ontologyBody.rows.length),
+                     attribute_0=document.createAttribute("class");     
 
-            var prefixTable = document.getElementById("prefixTable");
+                 attribute_0.value = "a1"; 
+                 newRow.setAttributeNode(attribute_0);     
 
-            for (var i = 0; i < prefixList.length; i++)
-            {
-                var newRow = prefixTable.insertRow(),
-                    cell1 = newRow.insertCell(0),
-                    cell2 = newRow.insertCell(1),
-                    cell3 = newRow.insertCell(2);
+                 var cell_1 = newRow.insertCell(0),
+                     cell_2 = newRow.insertCell(1),
+                     cell_3 = newRow.insertCell(2),
+                     cell_4 = newRow.insertCell(3),
+                     cell_5 = newRow.insertCell(4),
+                     cell_6 = newRow.insertCell(5),
+                     attribute_2 = document.createAttribute("ondblclick"),
+                     attribute_3 = document.createAttribute("ondblclick"),
+                     attribute_4 = document.createAttribute("ondblclick");
+                     attribute_5 = document.createAttribute("ondblclick"),     
 
-                cell1.innerHTML = prefixList[i][0];
-                cell2.innerHTML = prefixList[i][1];
-            }
-        }
+                 attribute_2.value = "createTextArea(this)";
+                 attribute_3.value = "createTextArea(this)"; 
+                 attribute_4.value = "createTextArea(this)";
+                 attribute_5.value = "createTextArea(this)";
+                     
+                 cell_1.innerHTML = index;
+                 cell_2.setAttributeNode(attribute_2);
+                 cell_3.setAttributeNode(attribute_3);
+                 cell_4.setAttributeNode(attribute_4);
+                 cell_5.setAttributeNode(attribute_5);
+                 cell_6.innerHTML = "<td align='center'><input type='checkbox' name='tableCheck' style='width:20px' /></td>";     
 
-        // Once the user open the window, it will load prefix list.
-        window.onload = loadPrefix;
+                 if (source === "empty")
+                 {
+                     cell_1.innerHTML = ontologyBody.getElementsByTagName('tr').length
+                 }
+                 
+                 if (source !== "empty")
+                 {
+                     cell_2.innerHTML = subject;
+                     cell_3.innerHTML = predicate;
+                     cell_4.innerHTML = object;     
 
-        /*
-           This Function is used to add one row in Prefix table
-        */
-        function addPrefixRow()
-        {
-            var prefixTable = document.getElementById("prefixTable"),
-                newRow = prefixTable.insertRow(prefixTable.rows.length),
-                cell1 = newRow.insertCell(0),
-                cell2 = newRow.insertCell(1),
-                cell3 = newRow.insertCell(2),
-                attribute_1=document.createAttribute("ondblclick"),
-                attribute_2=document.createAttribute("ondblclick");
+                     if (source === "nq")
+                     {
+                         cell_5.innerHTML = graphName;
+                     }
+                 }
+         }    
+       
 
-            attribute_1.value="createTextArea(this)";
-            attribute_2.value="createTextArea(this)";
-            cell1.setAttributeNode(attribute_1);
-            cell2.setAttributeNode(attribute_2);
-            cell3.innerHTML = "<td align='center'><input type='checkbox' name='prefixCheck' style='width:20px' /></td>";
-        }
         
         // Indicate whether html is under edit
         var underEdit = false;
@@ -101,225 +103,11 @@
             
             underEdit = false;
         }
-
-        function removePrefixRow()
-        {
-            var checkObject = document.getElementsByName("prefixCheck"),
-                prefixTable = document.getElementById("prefixTable");
-            
-            for (var k = 0; k < checkObject.length; k++)
-            {
-                if (checkObject[k].checked)
-                {
-                    prefixTable.deleteRow(k+11);
-                    k = -1;
-                }
-            }
-        }
-   
-        // Apply current prefix to terms.
-        function applyOntology()
-        {
-            var prefixTable = document.getElementById("prefixTable");
-
-            for (var j = 0; j < prefixTable.rows.length; j++)
-                prefixList[j] = new Array(prefixTable.rows[j].cells[0].innerHTML,prefixTable.rows[j].cells[1].innerHTML);
-
-            var myTable = document.getElementById("myTable"),
-                ontologyBody = myTable.tBodies[0];
-
-            for (var i = 0; i < ontologyBody.rows.length; i++)
-            {
-                for (var j = 0; j < 4; j++)  
-                {
-                    for (var k = 0; k < prefixList.length; k++)
-                        ontologyBody.rows[i].cells[j].innerHTML = ontologyBody.rows[i].cells[j].innerHTML.replace(prefixList[k][1],prefixList[k][0]);
-                }
-            }
-        }
-
-        // Show Full URI
-        function removeOntology()
-        {
-            var prefixTable = document.getElementById("prefixTable"),
-                myTable = document.getElementById("myTable"),
-                ontologyBody = myTable.tBodies[0];
-
-            for (var i = 0; i < ontologyBody.rows.length; i++)
-            {
-                for (var j = 0; j < 4; j++)
-                {
-                    for (var k = 0; k < prefixList.length; k++)
-                        ontologyBody.rows[i].cells[j].innerHTML = ontologyBody.rows[i].cells[j].innerHTML.replace(prefixList[k][0],prefixList[k][1]);
-                }
-            }
-        }
         
-        /*
-            This Function is used to add one row in table
-        */
-        function addRow(source, subject, predicate, object, graphName, index)
-        {        
-            var myTable = document.getElementById("myTable"),
-                ontologyBody = myTable.tBodies[0],
-                newRow = ontologyBody.insertRow(ontologyBody.rows.length),
-                attribute_0=document.createAttribute("class");
-
-            attribute_0.value = "a1"; 
-            newRow.setAttributeNode(attribute_0);
-
-            var cell_1 = newRow.insertCell(0),
-                cell_2 = newRow.insertCell(1),
-                cell_3 = newRow.insertCell(2),
-                cell_4 = newRow.insertCell(3),
-                cell_5 = newRow.insertCell(4),
-                cell_6 = newRow.insertCell(5),
-                attribute_2 = document.createAttribute("ondblclick"),
-                attribute_3 = document.createAttribute("ondblclick"),
-                attribute_4 = document.createAttribute("ondblclick");
-                attribute_5 = document.createAttribute("ondblclick"),
-
-            attribute_2.value = "createTextArea(this)";
-            attribute_3.value = "createTextArea(this)"; 
-            attribute_4.value = "createTextArea(this)";
-            attribute_5.value = "createTextArea(this)";
-                
-            cell_1.innerHTML = index;
-            cell_2.setAttributeNode(attribute_2);
-            cell_3.setAttributeNode(attribute_3);
-            cell_4.setAttributeNode(attribute_4);
-            cell_5.setAttributeNode(attribute_5);
-            cell_6.innerHTML = "<td align='center'><input type='checkbox' name='tableCheck' style='width:20px' /></td>";
-
-            if (source === "empty")
-            {
-                cell_1.innerHTML = ontologyBody.getElementsByTagName('tr').length
-            }
-            
-            if (source !== "empty")
-            {
-                cell_2.innerHTML = subject;
-                cell_3.innerHTML = predicate;
-                cell_4.innerHTML = object;
-
-                if (source === "nq")
-                {
-                    cell_5.innerHTML = graphName;
-                }
-            }
-        }
-
-        /*
-            This Function is used to remove one row in table
-        */
-        function removeRow()
-        {
-          // get selected checkbox
-            var checkObject = document.getElementsByName("tableCheck"),
-                myTable = document.getElementById("myTable");
-            
-            for (var k = 0; k < checkObject.length; k++)
-            {
-                if (checkObject[k].checked)
-                {
-                    myTable.deleteRow(k+1);
-                    k = -1;
-                }
-            }
-        }
+       
 
         var prefixSelectState = 0,
             mytableSelectState = 0;
-
-        function selectAll(target)
-        {
-            var selectState;
-            if (target === "myTable")
-            {
-                var checkObject = document.getElementsByName("tableCheck"),
-                    selectState = mytableSelectState;
-                    
-                    mytableSelectState = !mytableSelectState;
-            }
-            else if (target === "prefixTable")
-            {
-                var checkObject = document.getElementsByName("prefixCheck"),
-                    selectState = prefixSelectState;
-
-                    prefixSelectState = !prefixSelectState;
-            }
-
-            if (selectState)
-            {
-                for (var k = 0; k < checkObject.length; k++)
-                    checkObject[k].checked = 0;
-            }
-            else 
-            {
-                for (var k = 0; k < checkObject.length; k++)
-                    checkObject[k].checked = 1;
-            }
-
-        }
-
-        function tableSort(object)
-        {
-            // Get the table body
-            var myTable = document.getElementById("myTable"),
-                ontologyBody = myTable.tBodies[0],
-                buffer = [],
-                column;
-
-            switch (object.innerHTML)
-            {
-                case "Index":
-                    column = 0;
-                    break;
-                case "Graph Name":
-                    column = 4;
-                    break;
-                case "Object":
-                    column = 3;
-                    break;
-                case "Predicate":
-                    column = 2;
-                    break;
-                case "Subject":
-                    column = 1;
-                    break;
-            }
-
-            for (var i = 0; i < ontologyBody.rows.length; i++ )
-                buffer[i] = ontologyBody.rows[i];
-            
-            if (column !== 0)   
-                buffer.sort(function(item_1, item_2)
-                {
-                    if (isAscendant)
-                        return item_1.cells[column].innerHTML.localeCompare(item_2.cells[column].innerHTML);
-                    else
-                        return item_2.cells[column].innerHTML.localeCompare(item_1.cells[column].innerHTML);
-                }
-                )
-            else if (isAscendant)
-                buffer.sort(function(item_1, item_2)
-                {
-                    return item_1.cells[column].innerHTML - item_2.cells[column].innerHTML;
-                }
-                )
-            else
-                buffer.sort(function(item_1, item_2)
-                {
-                    return item_2.cells[column].innerHTML - item_1.cells[column].innerHTML;
-                }
-                )
-
-
-            for (var j = 0; j < buffer.length; j++)
-                ontologyBody.appendChild(buffer[j]);
-            
-            isAscendant = !isAscendant;
-        }
 
 
         function save()
@@ -601,3 +389,227 @@
         }
 
         document.getElementById('files').addEventListener('change', handleFileSelect, false);
+
+        return{
+            // Load the defaul prefix list
+
+
+
+            loadPrefix: function()
+            {
+                 prefixList = [Array("rdf:","http://www.w3.org/1999/02/22-rdf-syntax-ns#"),
+                          Array("rdfs:","http://www.w3.org/2000/01/rdf-schema#"),
+                          Array("foaf:","http://xmlns.com/foaf/0.1/"),
+                          Array("owl:","http://www.w3.org/2002/07/owl#"),
+                          Array("xsd:","http://www.w3.org/2001/XMLSchema#"),
+                          Array("Dbpedia-Owl:","http://dbpedia.org/ontology/"),
+                          Array("category:","http://dbpedia.org/resource/Category:"),
+                          Array("dbpedia:","http://dbpedia.org/resource/"),
+                          Array("dbpprop:","http://dbpedia.org/property/"), 
+                          Array("yago:","http://dbpedia.org/class/yago/"),
+                          Array("dcterms:","http://purl.org/dc/terms/")];       
+
+            var prefixTable = document.getElementById("prefixTable");
+
+            for (var i = 0; i < prefixList.length; i++)
+            {
+                var newRow = prefixTable.insertRow(),
+                    cell1 = newRow.insertCell(0),
+                    cell2 = newRow.insertCell(1),
+                    cell3 = newRow.insertCell(2);
+
+                cell1.innerHTML = prefixList[i][0];
+                cell2.innerHTML = prefixList[i][1];
+            }
+            },
+            //This Function is used to add one row in Prefix table
+            addPrefixRow: function()
+            {
+                            var prefixTable = document.getElementById("prefixTable"),
+                newRow = prefixTable.insertRow(prefixTable.rows.length),
+                cell1 = newRow.insertCell(0),
+                cell2 = newRow.insertCell(1),
+                cell3 = newRow.insertCell(2),
+                attribute_1=document.createAttribute("ondblclick"),
+                attribute_2=document.createAttribute("ondblclick");
+
+            attribute_1.value="createTextArea(this)";
+            attribute_2.value="createTextArea(this)";
+            cell1.setAttributeNode(attribute_1);
+            cell2.setAttributeNode(attribute_2);
+            cell3.innerHTML = "<td align='center'><input type='checkbox' name='prefixCheck' style='width:20px' /></td>";
+            },
+
+            removePrefixRow: function()
+            {
+                var checkObject = document.getElementsByName("prefixCheck"),
+                prefixTable = document.getElementById("prefixTable");
+            
+                for (var k = 0; k < checkObject.length; k++)
+                {
+                   if (checkObject[k].checked)
+                   {
+                      prefixTable.deleteRow(k+11);
+                      k = -1;
+                   }
+                }
+            },
+
+            // Apply current prefix to terms.
+            applyOntology: function()
+            {
+                 var prefixTable = document.getElementById("prefixTable");
+
+                for (var j = 0; j < prefixTable.rows.length; j++)
+                    prefixList[j] = new Array(prefixTable.rows[j].cells[0].innerHTML,prefixTable.rows[j].cells[1].innerHTML);
+
+                    var myTable = document.getElementById("myTable"),
+                    ontologyBody = myTable.tBodies[0];
+
+                for (var i = 0; i < ontologyBody.rows.length; i++)
+                {
+                    for (var j = 0; j < 4; j++)  
+                    {
+                        for (var k = 0; k < prefixList.length; k++)
+                            ontologyBody.rows[i].cells[j].innerHTML = ontologyBody.rows[i].cells[j].innerHTML.replace(prefixList[k][1],prefixList[k][0]);
+                    }
+                }
+            },
+
+            // Show Full URI
+            removeOntology: function()
+            {
+                  var prefixTable = document.getElementById("prefixTable"),
+                  myTable = document.getElementById("myTable"),
+                  ontologyBody = myTable.tBodies[0];
+
+                for (var i = 0; i < ontologyBody.rows.length; i++)
+                {
+                    for (var j = 0; j < 4; j++)
+                    {
+                        for (var k = 0; k < prefixList.length; k++)
+                            ontologyBody.rows[i].cells[j].innerHTML = ontologyBody.rows[i].cells[j].innerHTML.replace(prefixList[k][0],prefixList[k][1]);
+                    }
+                }
+            },
+
+            // This function is used to sort table
+            tableSort: function(object)
+            {
+                 // Get the table body
+                var myTable = document.getElementById("myTable"),
+                ontologyBody = myTable.tBodies[0],
+                buffer = [],
+                column;
+
+                switch (object.innerHTML)
+                {
+                case "Index":
+                    column = 0;
+                    break;
+                case "Graph Name":
+                    column = 4;
+                    break;
+                case "Object":
+                    column = 3;
+                    break;
+                case "Predicate":
+                    column = 2;
+                    break;
+                case "Subject":
+                    column = 1;
+                    break;
+                }
+
+                for (var i = 0; i < ontologyBody.rows.length; i++ )
+                    buffer[i] = ontologyBody.rows[i];
+            
+                if (column !== 0)   
+                    buffer.sort(function(item_1, item_2)
+                    {
+                        if (isAscendant)
+                            return item_1.cells[column].innerHTML.localeCompare(item_2.cells[column].innerHTML);
+                        else
+                            return item_2.cells[column].innerHTML.localeCompare(item_1.cells[column].innerHTML);
+                    }
+                    )
+                else if (isAscendant)
+                    buffer.sort(function(item_1, item_2)
+                   {
+                        return item_1.cells[column].innerHTML - item_2.cells[column].innerHTML;
+                   }
+                   )
+                else
+                   buffer.sort(function(item_1, item_2)
+                   {
+                        return item_2.cells[column].innerHTML - item_1.cells[column].innerHTML;
+                   }
+                   )
+
+
+            for (var j = 0; j < buffer.length; j++)
+                ontologyBody.appendChild(buffer[j]);
+            
+                isAscendant = !isAscendant;
+            },
+       
+
+             selectAll: function(target)
+             {
+                var selectState;
+                if (target === "myTable")
+                {
+                    var checkObject = document.getElementsByName("tableCheck"),
+                        selectState = mytableSelectState;
+                    
+                    mytableSelectState = !mytableSelectState;
+                }
+                else if (target === "prefixTable")
+                {
+                    var checkObject = document.getElementsByName("prefixCheck"),
+                        selectState = prefixSelectState;
+
+                    prefixSelectState = !prefixSelectState;
+                }
+
+                if (selectState)
+                {
+                    for (var k = 0; k < checkObject.length; k++)
+                        checkObject[k].checked = 0;
+                }
+                else 
+                {
+                    for (var k = 0; k < checkObject.length; k++)
+                        checkObject[k].checked = 1;
+                }
+
+             },
+
+              
+             //   This Function is used to add one row in table
+            public_addRow:function(source, subject, predicate, object, graphName, index)
+            {
+                addRow(source, subject, predicate, object, graphName, index);
+            },
+
+             
+             //    This Function is used to remove one row in table
+             
+             removeRow: function()
+             {
+               // get selected checkbox
+                 var checkObject = document.getElementsByName("tableCheck"),
+                     myTable = document.getElementById("myTable");
+                 
+                 for (var k = 0; k < checkObject.length; k++)
+                 {
+                     if (checkObject[k].checked)
+                     {
+                         myTable.deleteRow(k+1);
+                         k = -1;
+                     }
+                 }
+             }
+        }
+
+        }();
