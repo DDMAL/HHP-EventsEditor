@@ -1,5 +1,4 @@
-    (function()
-        {
+
         // prefixList is used to store prefix 
         var prefixList =  new Array();
 
@@ -602,4 +601,3 @@
         }
 
         document.getElementById('files').addEventListener('change', handleFileSelect, false);
-        })()
