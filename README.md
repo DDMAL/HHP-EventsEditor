@@ -12,6 +12,8 @@ The modification is in:
 
 3. Add index to imported table. 
 
+4. Support load of txt files 
+
 Log of previous version --
 
 Currently, it CAN do:
