@@ -1,5 +1,5 @@
-    var editor_func = function()
-        {
+var editor_func = function()
+{
         // prefixList is used to store prefix 
         var prefixList =  new Array();
 
@@ -54,16 +54,14 @@
                  }
          }    
        
-
-        
         // Indicate whether html is under edit
         var underEdit = false;
         // Indicate current order mode
         var isAscendant = true;
 
-        /*
-            This Function is used to change cell to edit mode
-        */
+        
+        // This Function is used to change cell to edit mode
+        
         function createTextArea(object)
         {
             if (!underEdit)
@@ -79,9 +77,9 @@
             }
         }
 
-        /*
-            This Function is used to finish editing the cell
-        */
+        
+        // This Function is used to finish editing the cell
+        
         function showKeyCode(evt,object)
         {
             if (evt.keyCode == 13)
@@ -151,9 +149,7 @@
             exportFile(valueArray.join(''), "n/a", "WebEditor_Export.nq");
         }
 
-        /*
-            This Function is used to handle files export
-        */
+        //This Function is used to handle files export
         function exportFile(value, type, name)
         {  
             var blob;
@@ -194,9 +190,7 @@
         if (!(window.File && window.FileReader && window.FileList && window.Blob))
             alert('The File APIs are not fully supported in this browser.');
 
-        /*
-            This Function is used to upload Files
-        */
+        // This Function is used to upload Files
         function handleFileSelect(evt)
         {
             var files = evt.target.files,
@@ -231,9 +225,8 @@
             document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
         }
   
-        /*
-            This Function is used to clear previous upload files
-        */
+        
+        //This Function is used to clear previous upload files
         function loadStart()
         {
             var myTable= document.getElementById('myTable'),
@@ -392,9 +385,6 @@
 
         return{
             // Load the defaul prefix list
-
-
-
             loadPrefix: function()
             {
                  prefixList = [Array("rdf:","http://www.w3.org/1999/02/22-rdf-syntax-ns#"),
@@ -422,6 +412,7 @@
                 cell2.innerHTML = prefixList[i][1];
             }
             },
+            
             //This Function is used to add one row in Prefix table
             addPrefixRow: function()
             {
@@ -553,7 +544,6 @@
                 isAscendant = !isAscendant;
             },
        
-
              selectAll: function(target)
              {
                 var selectState;
@@ -586,7 +576,7 @@
              },
 
               
-             //   This Function is used to add one row in table
+             //  This Function is used to add one row in table
             public_addRow:function(source, subject, predicate, object, graphName, index)
             {
                 addRow(source, subject, predicate, object, graphName, index);
@@ -594,7 +584,6 @@
 
              
              //    This Function is used to remove one row in table
-             
              removeRow: function()
              {
                // get selected checkbox
@@ -611,5 +600,4 @@
                  }
              }
         }
-
-        }();
+}();
