@@ -9,7 +9,10 @@ var editor_func = function()
         // Indicate whether prefix table is selected for function selectAll
         var prefixSelectState = 0;
         // Indicate whether main table is selected for function selectAll
-        var mytableSelectState = 0;
+        var mytableSelectState = 0;       
+        // Check is this browser support File APIs
+        if (!(window.File && window.FileReader && window.FileList && window.Blob))
+            alert('The File APIs are not fully supported in this browser.');
 
         function addRow(source, subject, predicate, object, graphName, index)
         {        
@@ -98,10 +101,6 @@ var editor_func = function()
             else 
                 location.href = blobUrl;
         }
-
-        // Check is this browser support File APIs
-        if (!(window.File && window.FileReader && window.FileList && window.Blob))
-            alert('The File APIs are not fully supported in this browser.');
 
         // This Function is used to upload Files
         function handleFileSelect(evt)
