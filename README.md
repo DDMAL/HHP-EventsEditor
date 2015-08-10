@@ -3,7 +3,10 @@ HHP-EventsEditor
 
 Human History Project: Events Editor
 
-Current Version: 2015.06.21
+Current Version: 2015.8.10
+The current extraction framework consists of three step, preprocess the input file for better extraction, extraction with openie library, and process the extraction for loading. It uses Stanford NER Tagger and POS Tagger, and nltk python interface. Run the Makefile to perform extraction. need access to models and jar files. It is explained in USAGE.txt file.
+
+---Past log---
 The modification is in:
 
 1. Clean the code.
