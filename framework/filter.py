@@ -74,6 +74,8 @@ def getName(sentence, tokens):
 				nameConnection = 1
 			elif numName > 0:
 				name = ''
+			elif countPRP > 0:
+				name = ''
 		elif nameConnection == 1:
 			numName += 1
 			nameConnection = 0
@@ -91,8 +93,6 @@ def getName(sentence, tokens):
 			elif i[0] == 'her,' or i[0] == 'him,':
 				PRPTag = 3
 			PRPCollection.append([i[0], stringPosition + sentence[stringPosition:].find(i[0]), len(i[0]), PRPTag])
-		if not name == '' and countPRP >0:
-			name = ''
 		stringPosition += tokenLength + 1
 		tokenPosition += 1
 	return [name, countPRP, PRPCollection, numName]
