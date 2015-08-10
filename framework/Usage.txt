@@ -9,7 +9,7 @@ $python
 >>>import nltk
 >>>nltk.download()
 
-Then a GUI would come up, Among Four taggers[Collections, Corpora, Models, All Packages], choose <All Packags>, and find the tuple with Identifier <punkt>, which is the package for sentence splitter and in filter step. Double click it, and it will be installed. Close the window and finish the setting.
+Then a GUI would come up, Among Four taggers[Collections, Corpora, Models, All Packages], choose <All Packags>, and find the tuple with Identifier <punkt>, which is the package for sentence splitter in filter step. Double click it, and it will be installed. Close the window and finish the setting.
 
 ----- setting of Stanford NLP libraries -----
 Then get the path of <stanfor-ner.jar> file. Put the model file <english.all.3class.distsim.crf.ser.gz> in the same path. This model file is in the <stanford-ner-VERSION.zip> downloaded from Stanford NER website. It is under the folder <classfiers>. Put the model file <english-bidirectional-distsim.tagger> in the same path. This model file is in the <stanford-postagger-VERSION.zip> downloaded from Stanford POS Tagger website. It is under the folder <model>. Put the file <stanford-postagger.jar> in the same path.
@@ -18,10 +18,10 @@ Then get the path of <stanfor-ner.jar> file. Put the model file <english.all.3cl
 ------------------------------------------------------------------------------------------------
 ---------- Running ----------
 
-cd to the directory contains following files:
+cd to the directory containing following files:
 
 ----- filter.py ----- 
-this is to preprocess the input file. It replaces PRP such as he, him, his, her with the person name under the following condition: If one sentence has only one name and no PRP and the next sentence has no name but PRPs, the PRP in the next sentence will be replaced by the person name. The person name is recognized by Stanford NER Tagger. PRP is recognized by Stanford POS Tagger. For possessive, like 'his', it will be replaced by person name + " 's ". When it comes to word 'her', if it is labeld by POS Tagger as "PRP$", it is possessive, othrewise it is a pronoun labeled as "PRP". The other thing filter.py does is to recognize birth/death time. It recognize the bracket pair "(" ")", and test if inside the bracket there are two dates and these two dates in text has distance less than 4. If it does, and there is only one name recognized in this sentence, then add a sentence claiming this person's birth and death date. Whether it meets this condition or not, the text inside the bracket will be removed since it would cause problem in extraction for unrecognized characters, etc. And commonly no extraction will be given based on the content between brackets because commonly it is not a sentence. 
+this is to preprocess the input file. It replaces PRP such as he, him, his, her with the person name under the following condition: If one sentence has only one name and the next sentence has no name but PRPs, the PRP in the next sentence will be replaced by the person name. The person name is recognized by Stanford NER Tagger. PRP is recognized by Stanford POS Tagger. For possessive, like 'his', it will be replaced by person name + " 's ". When it comes to word 'her', if it is labeld by POS Tagger as "PRP$", it is possessive, othrewise it is a pronoun labeled as "PRP". The other thing filter.py does is to recognize birth/death time. It recognize the bracket pair "(" ")", and test if inside the bracket there are two dates and these two dates in text has distance less than 4. If it does, and there is only one name recognized in this sentence, then add a sentence claiming this person's birth and death date. Whether it meets this condition or not, the text inside the bracket will be removed since it would cause problem in extraction for unrecognized characters, etc. And commonly few extractions will be given based on the content between brackets because commonly it is not a sentence. 
 The performance of this filter could be tested by following sentences:
 
 1. 
@@ -117,7 +117,7 @@ clean:
 	rm filtered.txt raw_extraction.txt
 *****
 
-As showed, STANFORD_MODELS and CLASSPATH environment variables must be set before using nltk combined with Stanford NLP libraries. The desult position is the directory containing these files. One could also indicate where models and jar files are. 
+As showed, STANFORD_MODELS and CLASSPATH environment variables must be set before using nltk combined with Stanford NLP libraries. The default position is the directory containing these files. One could also indicate where models and jar files are. 
 
 ---------- extraction ----------
 To perform extraction, cd to the directory contains above files, then run:
