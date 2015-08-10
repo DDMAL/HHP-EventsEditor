@@ -126,7 +126,7 @@ def bracketProcess(sentence, tokens):
 			tokenSelected = tokens[tokenPosition]
 			dateBuffer += [tokenSelected[0]]
 			sequence += 1
-		elif sequence >= 2:
+		elif sequence > 2:
 			dateCollector.append(dateBuffer)
 			datePosition.append(tokenPosition)
 			sequence = 0
