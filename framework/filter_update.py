@@ -52,8 +52,6 @@ def bracketProcess(text):
 	charList = list(text)
 	outputList = []
 	for char in charList:
-		preLeft = left
-		preRight = right
 		if char == '(' or char == '[':
 			left += 1
 			continue
