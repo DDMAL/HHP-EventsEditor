@@ -136,11 +136,10 @@ public class T {
 	    	}
 	    }
 	    
-	    System.out.println(corefInformation);
+	    //System.out.println(corefInformation);
 	    //System.out.println(nerMap);
 	    //System.out.println(posMap);
 	    //System.out.println(tokenMap);
-	    
 	    
 	    //Write file
 	    StringBuilder output = new StringBuilder();
