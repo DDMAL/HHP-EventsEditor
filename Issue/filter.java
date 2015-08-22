@@ -12,7 +12,7 @@ public class T {
 	final static Charset ENCODING = StandardCharsets.UTF_8;
 	
 	public static void main(String[] args) throws IOException {
-	//Environment setting of StanfordNLP
+	    //Environment setting of StanfordNLP
 	    Properties props = new Properties();
 	    props.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner, parse, dcoref");
 	    StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
