@@ -8,7 +8,7 @@ import edu.stanford.nlp.ling.CoreAnnotations.*;
 import edu.stanford.nlp.dcoref.*;
 import edu.stanford.nlp.dcoref.CorefCoreAnnotations.*;
 import edu.stanford.nlp.dcoref.CorefChain.CorefMention;
-public class T {
+public class FilterInput {
 	final static Charset ENCODING = StandardCharsets.UTF_8;
 	
 	public static void main(String[] args) throws IOException {
