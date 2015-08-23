@@ -59,8 +59,8 @@ public class LoadExtraction {
 			outputWriter.print(i);
 			outputWriter.print('\n');
 		}
-	    outputWriter.close();	    
-	    System.out.print("Finished");
+		outputWriter.close();	    
+		System.out.print("Finished");
 	}
 	
 	private static String processTimeLocation(ArrayList<String> conditionList, char Mark, String conditionBuffer){
