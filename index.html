@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="stylesheet" href="./css/style2.css" type="text/css" id="" media="print, projection, screen" />
+<script src="http://cdn.jsdelivr.net/g/es6-promise@1.0.0"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jsonld/0.3.15/jsonld.js"></script>
+
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/themes/base/jquery-ui.css" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>    
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+<style type="text/css">
+table{border-collapse:collapse;border-spacing:0;}
+.listext th{background:#eee;color:#3366cc;}
+.listext th,.listext td{border:solid 1px #ddd;text-align:left;padding:10px;font-size:14px;}
+.rc-handle-container{position:relative;}
+.rc-handle{position:absolute;width:7px;cursor:ew-resize;*cursor:pointer;margin-left:-3px;}
+</style>
+
+
+
+
+</head>
+<body onload = editor_func.loadPrefix()>
+<div class="title">
+  <h1>RDF Web Editor Test Version</h1>
+</div>
+
+<table width="90%" border="1" class="t2">
+  <tr>
+    <td>
+    <input type="file" value="import data" id="files" name="files[]"/><br>
+    <output id="list"></output>
+    <input type="button" id="saveText" class='btn blue' value="Export" onclick="editor_func.save()"/></div>  
+    <input id="downloadjson" type="button"  class='btn green' value="downloadjson" onclick="convertToJson()" name="export to json" />
+
+    </td>
+    <td>
+      <table width="95%" id="headerTable" border="1" class="t3" style="word-break:break-all; word-wrap:break-all;">
+      <thead>
+      <tr>
+        <th width="10%">Prefix</th>
+        <th width="25%">Namespace</th>
+        <th width="5%" onclick="editor_func.selectAll('prefixTable')">Select</th>
+      </tr>
+      </thead>
+      <tbody id="prefixTable">
+      </tbody>
+      </table>
+      <table width="90%" align="center" class="t4">
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td><input name="xx" class='btn green' type="button" value="Add" onclick="editor_func.addPrefixRow()"/></td>
+          <td><input name="xx" class='btn green' type="button" value="Delete" onclick="editor_func.removePrefixRow()"/></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>Prefix/URI Switch:</td>
+          <td><input name="xx" class='btn pink' type="button" value="Prefix" onclick="editor_func.applyOntology()"/></td>
+          <td><input name="xx" class='btn pink' type="button" value="Full URL" onclick="editor_func.removeOntology()"/></td>
+        </tr>
+     </table>
+    </td>
+  </tr>
+</table>
+<br><br>
+<table width="90%" id="myTable"  border="1" class="t2" style="word-break:break-all; word-wrap:break-all;">
+  <thead>
+  	<tr>
+    <th onclick="editor_func.tableSort(this)">Index</th>
+    <th  onclick="editor_func.tableSort(this)">Subject</th>
+    <th onclick="editor_func.tableSort(this)">Predicate</th>
+    <th onclick="editor_func.tableSort(this)">Object</th>
+    <th onclick="editor_func.tableSort(this)">Graph Name</th>
+    <th onclick="editor_func.selectAll('myTable')">Select</th>
+   </tr>
+  </thead>
+	<tbody>
+	</tbody>
+</table>
+<div>
+ <table width="90%">
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
+<table width="90%" align="center">
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td><input name="xx" class='btn blue' type="button" value="Add" onclick="editor_func.public_addRow('empty')"/></td>
+    <td><input name="xx" class='btn blue' type="button" value="Delete" onclick="editor_func.removeRow()"/></td>
+  </tr>
+</table>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="javascript/jquery.resizableColumns.js"></script>
+<script type="text/javascript">
+$(function(){
+  $("table").resizableColumns({});
+});
+</script>
+
+<script type="text/javascript">
+
+
+function convertToJson(){
+
+  var table = $('#myTable').tableToJSON(); // Convert the table into a javascript object
+  downloadFile("export.jsonld",JSON.stringify(table));
+}
+
+function downloadFile(fileName, content){
+    var aLink = document.createElement('a');
+    var blob = new Blob([content]);
+    var evt = document.createEvent("HTMLEvents");
+    evt.initEvent("click", false, false);//initEvent 不加后两个参数在FF下会报错, 感谢 Barret Lee 的反馈
+    aLink.download = fileName;
+    aLink.href = URL.createObjectURL(blob);
+    aLink.dispatchEvent(evt);
+}
+
+
+</script>
+<script type="text/javascript" src="./javascript/editor.js"></script>
+<script type="text/javascript" src="./javascript/jquery.tabletojson.js"></script>

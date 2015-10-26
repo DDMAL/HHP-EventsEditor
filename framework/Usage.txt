@@ -1,0 +1,137 @@
+------------------------------------------------------------------------------------------------
+---------- Settings ----------
+The filter.py file is built based on some other distributions: Stanford NLP libraries, nltk as an python interface for Stanfor NLP libraries.
+
+----- setting of nltk -----
+First install nltk: http://www.nltk.org/install.html. This is a python interface to Stanford NLP libraries. After installation, open command line, input:
+
+$python
+>>>import nltk
+>>>nltk.download()
+
+Then a GUI would come up, Among Four taggers[Collections, Corpora, Models, All Packages], choose <All Packags>, and find the tuple with Identifier <punkt>, which is the package for sentence splitter in filter step. Double click it, and it will be installed. Close the window and finish the setting.
+
+----- setting of Stanford NLP libraries -----
+Then get the path of <stanfor-ner.jar> file. Put the model file <english.all.3class.distsim.crf.ser.gz> in the same path. This model file is in the <stanford-ner-VERSION.zip> downloaded from Stanford NER website. It is under the folder <classfiers>. Put the model file <english-bidirectional-distsim.tagger> in the same path. This model file is in the <stanford-postagger-VERSION.zip> downloaded from Stanford POS Tagger website. It is under the folder <model>. Put the file <stanford-postagger.jar> in the same path.
+
+
+------------------------------------------------------------------------------------------------
+---------- Running ----------
+
+cd to the directory containing following files:
+
+----- filter.py ----- 
+this is to preprocess the input file. It replaces PRP such as he, him, his, her with the person name under the following condition: If one sentence has only one name and the next sentence has no name but PRPs, the PRP in the next sentence will be replaced by the person name. The person name is recognized by Stanford NER Tagger. PRP is recognized by Stanford POS Tagger. For possessive, like 'his', it will be replaced by person name + " 's ". When it comes to word 'her', if it is labeld by POS Tagger as "PRP$", it is possessive, othrewise it is a pronoun labeled as "PRP". The other thing filter.py does is to recognize birth/death time. It recognize the bracket pair "(" ")", and test if inside the bracket there are two dates and these two dates in text has distance less than 4. If it does, and there is only one name recognized in this sentence, then add a sentence claiming this person's birth and death date. Whether it meets this condition or not, the text inside the bracket will be removed since it would cause problem in extraction for unrecognized characters, etc. And commonly few extractions will be given based on the content between brackets because commonly it is not a sentence. 
+The performance of this filter could be tested by following sentences:
+
+1. 
+Born in Salzburg, Mozart showed prodigious ability from his earliest childhood. Already competent on keyboard and violin, he composed from the age of five and performed before European royalty. At 17, he was engaged as a musician at the Salzburg court, but grew restless and travelled in search of a better position. While visiting Vienna in 1781, he was dismissed from his Salzburg position. He chose to stay in the capital, where he achieved fame but little financial security.
+===>
+Born in Salzburg, Mozart showed prodigious ability from his earliest childhood. Already competent on keyboard and violin, Mozart composed from the age of five and performed before European royalty. At 17, Mozart was engaged as a musician at the Salzburg court, but grew restless and travelled in search of a better position. While visiting Vienna in 1781, Mozart was dismissed from Mozart's Salzburg position. Mozart chose to stay in the capital, where Mozart achieved fame but little financial security.
+
+2.
+Mary is a singer. Her family raised her in New York, where her husband met her. Mary died in 1926, May.
+===>
+Mary is a singer. Mary's family raised Mary in New York, where Mary's husband met Mary. Mary died in 1926, May.
+
+3.
+Ludwig van Beethoven (Listeni/ˈlʊdvɪɡ væn ˈbeɪˌtoʊvən/; German: [ˈluːtvɪç fan ˈbeːtˌhoˑfn̩] ( listen); baptised 17 December 1770[1] – 26 March 1827) was a German composer and pianist.
+===>
+Ludwig van Beethoven  was a German composer and pianist. Ludwig van Beethoven was born in 17 December 1770[1]. Ludwig van Beethoven died in 26 March 1827).
+
+----- load.py -----
+This is to transform the extraction to the format that Event Editor could read. After filter, the extraction may give the following extractions, the transformed tuple is attached under each extraction (put each relation in the same line seperated by ";", where in original file it is distributed in three consecutive lines without ";")
+1. Born in Salzburg, Mozart showed prodigious ability from his earliest childhood.
+0.92 (Mozart; showed; prodigious ability)
+Mozart; showed; prodigious ability
+
+2. Already competent on keyboard and violin, Mozart composed from the age of five and performed before European royalty.
+0.92 (Mozart; composed; from the age of five)
+0.91 (Mozart; performed; T:before European royalty)
+Mozart; composed; from the age of five
+Mozart; performed; before European royalty
+
+3. At 17, Mozart was engaged as a musician at the Salzburg court, but grew restless and travelled in search of a better position.
+0.96 (Mozart; was engaged; as a musician at the Salzburg court; T:At 17)
+0.89 (Mozart; grew; restless; T:At 17)
+0.84 (Mozart; travelled; T:At 17)
+Mozart; was engaged; as a musician at the Salzburg court at 17
+Mozart; grew; restless at 17
+Mozart; travelled; At 17
+
+4. While visiting Vienna in 1781, Mozart was dismissed from Mozart's Salzburg position.
+0.96 (Mozart; was dismissed; from Mozart's Salzburg position; T:While visiting Vienna in 1781)
+Mozart; was dismissed; from Mozart's Salzburg position while visiting Vienna in 1781
+
+5. Mozart chose to stay in the capital, where Mozart achieved fame but little financial security.
+0.92 (Mozart; chose; to stay in the capital)
+0.91 (Mozart; to stay; in the capital)
+0.95 (Mozart; achieved; fame; L:the capital)
+Mozart; chose; to stay in the capital
+Mozart; to stay; in the capital
+Mozart; achieved; fame in the capital
+
+6. Mary's family raised Mary in New York, where Mary's husband met Mary.
+0.94 (Mary's family; raised; Mary; L:in New York)
+0.98 (Mary's husband; met; Mary; L:New York)
+Mary's family; raised; Mary in New York
+Mary's husband; met; Mary in New York
+
+7. Mary died in 1926, May.
+0.93 (Mary; died; T:in 1926; May)
+Mary died in 1926 May
+
+8. Ludwig van Beethoven was born in 17 December 1770[1].
+0.94 (Ludwig van Beethoven; was born; T:in 17 December 1770[1)
+Ludwig van Beethoven; was born; in 17 December 1770[1
+
+9. Ludwig van Beethoven died in 26 March 1827).
+0.94 (Ludwig van Beethoven; died; T:in 26; T:March 1827)
+Ludwig van Beethoven; died; in 26 march 1827
+
+----- english.all.3class.distsim.crf.ser.gz --- english-bidirectional-distsim.tagger ---
+Stanford NLP model files
+
+----- stanford-ner.jar --- stanford-postagger.jar -----
+Stanford NLP libraries
+
+----- openie-assembly.jar -----
+openie extraction library
+
+----- Make file -----
+it conatins:
+*****
+output = extraction.txt
+input = record.txt
+models =.
+jar_files =.
+export STANFORD_MODELS := $(models)
+export CLASSPATH := $(jar_files)
+
+all:
+	python filter.py $(input) filtered.txt
+	java -jar openie-assembly.jar --split filtered.txt raw_extraction.txt
+	python load.py raw_extraction.txt $(output)
+
+clean:
+	rm filtered.txt raw_extraction.txt
+*****
+
+As showed, STANFORD_MODELS and CLASSPATH environment variables must be set before using nltk combined with Stanford NLP libraries. The default position is the directory containing these files. One could also indicate where models and jar files are. 
+
+---------- extraction ----------
+To perform extraction, cd to the directory contains above files, then run:
+$ make input=<path to input file/input file name>
+The default output file is extraction.txt. 
+One could also indicate the output file name by 
+$ make input=<path to input file/input file name> output=<path to output file/output file name>
+models and jar files location could be set by 
+$ make input=<path to input file/input file name> models=<path to model file> jar_files=<path to jar file>
+
+It would take several seconds to finish, and choose the output file from EventEditor would load the extraction result.
+filtered.txt is the preprocess result. raw_extraction.txt is the result of extraction. To delete them, run:
+$ make clean
+
+
+
+
